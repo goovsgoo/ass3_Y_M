@@ -50,7 +50,7 @@ public class Warehouse implements WarehouseInterface {
 			int quantity = repairRequirements.isRequired(tool);
 			if (quantity > 0)
 				tool.acquire(quantity);
-		}																// Yoed stop here
+		}																// Yoed stop here///////////////////////////////////////
 		// acquire materials
 		for (RepairMaterial ingredient : ingredients){
 			int quantity = RepairRequirements.isRequired(ingredient);

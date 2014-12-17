@@ -2,16 +2,16 @@ package REIT.pas;
 import java.util.concurrent.*;
 
 /*
- * 2.3 KitchenTool
+ * 2.7 RepairTool
 
-This object will hold information of a single kitchen tool type. Each kitchen tool has: (1) Name (2)
+This object is destined to be in the warehouse. It will hold the name of the tool, as well as the
+current quantity found in the warehouse. Ensure thread safety in this object. Why? How?
 
-Quantity. This item is not consumed in the process, but returned once its use is done.
  */
 
 /**
  * 
- * @author Shimrit Zabib
+ * @author Meni & Yoed
  * this class simulates a kitchen tool.
  *
  */
@@ -19,10 +19,10 @@ public class RepairTool {
 	
 	final private String NAME;
 	final private int QUANTITY;
-	private Semaphore kitchenToolSemaphore;
+	private Semaphore RepairToolSemaphore;
 	
 	/**
-	 * constructs a new KitchenTool object using a name and quantity.
+	 * constructs a new Repair Tool object using a name and quantity.
 	 * @param name
 	 * @param quantity
 	 * @param Semaphore
@@ -30,33 +30,33 @@ public class RepairTool {
 	public RepairTool(){
 		NAME = "";
 		QUANTITY = 0;
-		kitchenToolSemaphore = new Semaphore(QUANTITY, true);
+		RepairToolSemaphore = new Semaphore(QUANTITY, true);
 	}
 	
 	public RepairTool(String name, int quantity){
 		this.NAME = name;
 		this.QUANTITY = quantity;
-		kitchenToolSemaphore = new Semaphore(quantity, true);
-	}
-	
-	/**
-	 * compares between KitchenTool objects by name.
-	 * @param other KitchenTool to compare.
-	 * @return true if the names match.
-	 * @return false if the names don't match.
-	 */
-	protected boolean equals(RepairTool other){
-		return this.NAME.equals(other.NAME);
+		RepairToolSemaphore = new Semaphore(quantity, true);
 	}
 	
 	/**
 	 * compares between this.name and a String.
 	 * @param otherName to compare to this.name.
-	 * @return true if the names match.
-	 * @return false if the names don't match.
+	 * @return true if the names are equal.
+	 * @return false else.
 	 */
 	protected boolean equals(String otherName){
 		return this.NAME.equals(otherName);
+	}
+	
+	/**
+	 * compares between Repair Tool objects by name.
+	 * @param other RepairTool to compare.
+	 * @return true if the names match.
+	 * @return false else.
+	 */
+	protected boolean equals(RepairTool other){
+		return this.NAME.equals(other.NAME);
 	}
 	
 	/**
@@ -64,34 +64,37 @@ public class RepairTool {
 	 * @return this.quantity.
 	 */
 	protected int quantity(){
-		return this.kitchenToolSemaphore.availablePermits();
+		// quantity of tool is actually stored as number of aviable permits 
+		return this.RepairToolSemaphore.availablePermits();
 	}
-	
+
 	/**
-	 * simulates acquiring a single piece of the KitchenTool by FIFO, using a Semaphore.
-	 * @param numOfPermits - how much KitchenTools to acquire.
+	 * releases a RepairTool (= Semaphore's permit) after finished using .
+	 * @param numOfPermits - number of permits that are released.
 	 */
-	protected void acquire(int numOfPermits){
+	protected void release(int numOfTools){
+		RepairToolSemaphore.release(numOfTools);
+		Management.LOGGER.finer(new StringBuilder(NAME).append(" was released.").toString());
+	}
+
+	/**
+	 * simulates acquiring a RepairTool, using a Semaphore.
+	 * @param numOfPermits - how much RepairTool to acquire.
+	 */
+	protected void acquire(int numOfTools){
         Management.LOGGER.finest(new StringBuilder("attempting to acquire ").append(NAME).toString());
-		//this kitchenTool is trying to acquire a semaphore.
-		try {
-			kitchenToolSemaphore.acquire(numOfPermits);
+		//this RepairTool is trying to acquire a semaphore.
+		try 
+		{
+			RepairToolSemaphore.acquire(numOfTools);
 			Management.LOGGER.finer(new StringBuilder(NAME).append(" was aqcuired.").toString());
-		} catch (InterruptedException e)
+		} 
+		catch (InterruptedException e)
 		{
 			return;
 		}
 	}
-	
-	/**
-	 * releases the permits of kitchenTool Semaphore after finished using .
-	 * @param numOfPermits - number of permits that are released.
-	 */
-	protected void release(int numOfPermits){
-		kitchenToolSemaphore.release(numOfPermits);
-		Management.LOGGER.finer(new StringBuilder(NAME).append(" was released.").toString());
-	}
-	
+		
 	/**
 	 * overrides toString method  
 	 */
