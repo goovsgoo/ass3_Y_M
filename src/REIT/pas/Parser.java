@@ -18,8 +18,8 @@ public class Parser {
 	private static Warehouse warehouse = Warehouse.instance();
 	private static RepairTool repairTool;
 	private static RepairMaterial repairMaterial;
-	private static RunnableChef runnableChef;
-	private static RunnableDeliveryPerson runnableDeliverer;
+	private static RunnableClerk runnableClerk;
+	//private static RunnableDeliveryPerson runnableDeliverer;
 
 	/**
 	 * parse the files that gets from Driver class.		
@@ -42,30 +42,21 @@ public class Parser {
 		if (rootName.equals("REIT")){
 			parseInitialData(doc);
 		}
-		else if (rootName.equals("Menu")){
-			parseMenu(doc);
+		else if (rootName.equals("AssetContentsRepairDetails")){
+			parseAssetContentsRepairDetails(doc);
 		}
-		else if (rootName.equals("OrderList")){
-			parseOrdersList(doc);
+		else if (rootName.equals("Assets")){
+			parseAssets(doc);
+		}
+		else if (rootName.equals("CustomersGroups")){
+			parseCustomersGroups(doc);
 		}
 			
 	}
 	
 	
 	private static void parseInitialData(Document initialDataDoc){
-		
-		//parse address
-		/*
-		Node addressList = initialDataDoc.getElementsByTagName("Address").item(0);
-	 	if (addressList.getNodeType() == Node.ELEMENT_NODE) {
-			Element addressElement = (Element) addressList;
-			double x = Double.parseDouble(addressElement.getElementsByTagName("x").item(0).getTextContent());
-			double y = Double.parseDouble(addressElement.getElementsByTagName("y").item(0).getTextContent());
-			
-			management.coordinatesSetter(x, y);
-		}
-		*/
-		
+
 		//parse warehouse
 		Node warehouseListNode = initialDataDoc.getElementsByTagName("Warehouse").item(0);
 		Element warehouseElement = (Element) warehouseListNode;
@@ -112,110 +103,155 @@ public class Parser {
 			if (clerkNode.getNodeType() == Node.ELEMENT_NODE) {
 		 		Element clerkElement = (Element) clerkNode;
 		 		String clerkName = clerkElement.getElementsByTagName("Name").item(0).getTextContent();
-	 			//double efficiency = Double.parseDouble(clerkElement.getElementsByTagName("efficiencyRating").item(0).getTextContent());
- 				//int endurance = Integer.parseInt(clerkElement.getElementsByTagName("enduranceRating").item(0).getTextContent());
-		 		String orderID = new StringBuilder("Order #").append(i).toString();							//Yoed stop Here!!////////////
-		 		
- 				runnableChef = new RunnableChef(chefName, efficiency, endurance);
- 				management.addChef(runnableChef);
+		 		String location = clerkElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
+	 			//String location = new StringBuilder("Location #").append(i).toString();						
+	 			
+	 			runnableClerk = new RunnableClerk(clerkName, location);
+ 				management.addClerk(runnableClerk);
 			 }
 		 }
 		
-		//parse delivery persons
-		Node deliverersListNode = staffElement.getElementsByTagName("DeliveryPersonals").item(0);
-		Element delivererListElement = (Element) deliverersListNode;
-		for (int i = 0; i < delivererListElement.getElementsByTagName("DeliveryPerson").getLength(); i++) {
-			Node delivererNode = delivererListElement.getElementsByTagName("DeliveryPerson").item(i);
-			if (delivererNode.getNodeType() == Node.ELEMENT_NODE) {
-		 		Element delivererElement = (Element) delivererNode;
-		 		String delivererName = delivererElement.getElementsByTagName("name").item(0).getTextContent();
- 				double speed = Double.parseDouble(delivererElement.getElementsByTagName("speed").item(0).getTextContent());
- 				
- 				runnableDeliverer = new RunnableDeliveryPerson(delivererName, speed);
- 				management.addDeliveryPerson(runnableDeliverer);
-			}
-		 }
+		//parse MaintenancePersons
+	 	int numberOfMaintenancePersons = Integer.parseInt(clerksListElement.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());
+	 	int totalNumberOfRentalRequests = Integer.parseInt(clerksListElement.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
+			 	
+		//Maybe start here - RunnableMaintaineceRequest? ~ Yoed
 	}
 			
-	private static void parseMenu(Document menuDoc){
+	private static void parseAssetContentsRepairDetails(Document assetContentsDoc){
 
-		// parse dishes
-		Node dishListNode = menuDoc.getElementsByTagName("Dishes").item(0);
-		Element dishListElement = (Element) dishListNode;
-		for (int i = 0; i < dishListElement.getElementsByTagName("Dish").getLength(); i++) {
-			Node dishNode = dishListElement.getElementsByTagName("Dish").item(i);
-		 	if (dishNode.getNodeType() == Node.ELEMENT_NODE) {
-		 		Element dishElement = (Element) dishNode;
-		 		String dishName = dishElement.getElementsByTagName("name").item(0).getTextContent();
-		 		int cookTime = Integer.parseInt(dishElement.getElementsByTagName("expectedCookTime").item(0).getTextContent());
-		 		int difficulty = Integer.parseInt(dishElement.getElementsByTagName("difficultyRating").item(0).getTextContent());
-		 		int reward = Integer.parseInt(dishElement.getElementsByTagName("reward").item(0).getTextContent());
+		// parse AssetContent
+		for (int i = 0; i < assetContentsDoc.getElementsByTagName("AssetContent").getLength(); i++) {
+			Node assetContentNode = assetContentsDoc.getElementsByTagName("AssetContent").item(i);
+		 	if (assetContentNode.getNodeType() == Node.ELEMENT_NODE) {
+		 		Element assetContentElement = (Element) assetContentNode;
+		 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				
-		 		Dish newDish = new Dish(dishName, cookTime, difficulty, reward);
+		 		AssetContent newAssetContent = new AssetContent(assetContentName);
 		 				 		
 		 		// parse tools
-		 		Node toolListNode = dishElement.getElementsByTagName("KitchenTools").item(0);
+		 		Node toolListNode = assetContentElement.getElementsByTagName("Tools").item(0);
 		 		Element toolListElement = (Element) toolListNode;
-		 		for (int j = 0 ; j < toolListElement.getElementsByTagName("KitchenTool").getLength() ; j++){
-		 			Node toolNode = toolListElement.getElementsByTagName("KitchenTool").item(j);
+		 		for (int j = 0 ; j < toolListElement.getElementsByTagName("Tool").getLength() ; j++){
+		 			Node toolNode = toolListElement.getElementsByTagName("Tool").item(j);
 		 			if (toolNode.getNodeType() == Node.ELEMENT_NODE){
 		 				Element toolElement = (Element) toolNode;
-		 				String toolName = toolElement.getElementsByTagName("name").item(0).getTextContent();
-		 				int quantity = Integer.parseInt(toolElement.getElementsByTagName("quantity").item(0).getTextContent());
+		 				String toolName = toolElement.getElementsByTagName("Name").item(0).getTextContent();
+		 				int quantity = Integer.parseInt(toolElement.getElementsByTagName("Quantity").item(0).getTextContent());
 		 				
-		 				newDish.addTool(toolName, quantity);
+		 				newAssetContent.addTool(toolName, quantity);
 		 			}
 		 		}
 				 		
-		 		// parse ingredients
-		 		Node ingredientListNode = dishElement.getElementsByTagName("Ingredients").item(0);
-		 		Element ingredientListElement = (Element) ingredientListNode;
-		 		for (int j = 0 ; j < ingredientListElement.getElementsByTagName("Ingredient").getLength() ; j++){
-		 			Node IngredientNode = ingredientListElement.getElementsByTagName("Ingredient").item(j);
-		 			if (IngredientNode.getNodeType() == Node.ELEMENT_NODE){
-		 				Element IngredientElement = (Element) IngredientNode;
-		 				String ingredientName = IngredientElement.getElementsByTagName("name").item(0).getTextContent();
-		 				int quantity = Integer.parseInt(IngredientElement.getElementsByTagName("quantity").item(0).getTextContent());
+		 		// parse Materials
+		 		Node materialsListNode = assetContentElement.getElementsByTagName("Materials").item(0);
+		 		Element materialsListElement = (Element) materialsListNode;
+		 		for (int j = 0 ; j < materialsListElement.getElementsByTagName("Material").getLength() ; j++){
+		 			Node materialNode = materialsListElement.getElementsByTagName("Material").item(j);
+		 			if (materialNode.getNodeType() == Node.ELEMENT_NODE){
+		 				Element materialElement = (Element) materialNode;
+		 				String materialName = materialElement.getElementsByTagName("Name").item(0).getTextContent();
+		 				int quantity = Integer.parseInt(materialElement.getElementsByTagName("Quantity").item(0).getTextContent());
 		 				
-		 				newDish.addIngredient(ingredientName, quantity);
+		 				newAssetContent.addMaterial(materialName, quantity);
 		 			}
 		 		}
 		 		
-				// add dish to menu in management.
-			 	management.addDish(newDish);
+				// add AssetContent to asset in management???????? ~ Yoed
+			 	management.addAssetContent(newAssetContent);
 			}
 		}
 	}
 	
-	private static void parseOrdersList(Document oredersListDoc){
-		
-		// parse orders.
-		Node orderListNode = oredersListDoc.getElementsByTagName("Orders").item(0);
-		Element orderListElement = (Element) orderListNode;
-		for (int i = 0; i < orderListElement.getElementsByTagName("Order").getLength(); i++) {
-			Node orderNode = orderListElement.getElementsByTagName("Order").item(i);
-		 	if (orderNode.getNodeType() == Node.ELEMENT_NODE) {
-		 		Element orderElement = (Element) orderNode;
-		 		String orderID = new StringBuilder("Order #").append(i).toString();
-		 		Element address = (Element) orderElement.getElementsByTagName("DeliveryAddress").item(0);
-		 		int x = Integer.parseInt(address.getElementsByTagName("x").item(0).getTextContent());
-		 		int y = Integer.parseInt(address.getElementsByTagName("y").item(0).getTextContent());
+	private static void parseAssets(Document assetsDoc){
+
+		// parse Asset
+		for (int i = 0; i < assetsDoc.getElementsByTagName("Asset").getLength(); i++) {
+			Node assetNode = assetsDoc.getElementsByTagName("Asset").item(i);
+		 	if (assetNode.getNodeType() == Node.ELEMENT_NODE) {
+		 		Element assetElement = (Element) assetNode;
+		 		String assetType = assetElement.getElementsByTagName("Type").item(0).getTextContent();
+ 				int assetSize = Integer.parseInt(assetElement.getElementsByTagName("Size").item(0).getTextContent());
+ 				String location = assetElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
+	 			//String location = new StringBuilder("Location #").append(i).toString();	
+ 				int assetCostPerNight = Integer.parseInt(assetElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
+
+		 		Asset newAsset = new Asset(assetType,assetSize,location,assetCostPerNight);
 		 		
-		 		Order newOrder = new Order(orderID, x, y);
+		 	//parse assetContentsList
+			Node assetContentsListNode = assetElement.getElementsByTagName("AssetContents").item(0);
+			Element assetContentsElement = (Element) assetContentsListNode;
 		 		
-		 		Node dishListNode = orderElement.getElementsByTagName("Dishes").item(0);
-		 		Element dishListElement = (Element) dishListNode;
-		 		for (int j = 0 ; j < dishListElement.getElementsByTagName("Dish").getLength() ; j++){
-		 			Node dishNode = dishListElement.getElementsByTagName("Dish").item(j);
-		 			if (dishNode.getNodeType() == Node.ELEMENT_NODE){
-		 				Element dishElement = (Element) dishNode;
-		 				String dishName = dishElement.getElementsByTagName("name").item(0).getTextContent();
-		 				int quantity = Integer.parseInt(dishElement.getElementsByTagName("quantity").item(0).getTextContent());
+		 	// parse AssetContent
+				for (int j = 0; j < assetContentsElement.getElementsByTagName("AssetContent").getLength(); j++) {
+					Node assetContentNode = assetContentsElement.getElementsByTagName("AssetContent").item(j);
+				 	if (assetContentNode.getNodeType() == Node.ELEMENT_NODE) {
+				 		Element assetContentElement = (Element) assetContentNode;
+				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
+		 				int repairMultiplier = Integer.parseInt(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				newOrder.addDish(management.getDishByName(dishName), quantity);
-		 			}
-		 		}
-		 		management.addOrder(newOrder);
+		 				newAsset.addNewContent(assetContentName,repairMultiplier);
+				 	}
+				 }
+				// add asset to assets in management???????? ~ Yoed
+			 	management.addAsset(newAsset);
+			}
+		}
+	}
+	
+	
+	private static void parseCustomersGroups(Document customersGroupsDoc){
+		
+		// parse CustomerGroupDetailsList
+		Node customerGroupsListNode = customersGroupsDoc.getElementsByTagName("CustomerGroups").item(0);
+		Element customerGroupsElement = (Element) customerGroupsListNode;
+		
+		// parse CustomerGroupDetails
+		for (int j = 0; j < customerGroupsElement.getElementsByTagName("CustomerGroupDetails").getLength(); j++) {
+			Node customerGroupNode = customerGroupsElement.getElementsByTagName("CustomerGroupDetails").item(j);
+		 	if (customerGroupNode.getNodeType() == Node.ELEMENT_NODE) {
+		 		Element customerGroupElement = (Element) customerGroupNode;
+		 		String groupManagerName = customerGroupElement.getElementsByTagName("GroupManagerName").item(0).getTextContent();
+		 		
+		 		CustomerGroup newCustomerGroup = CustomerGroup(groupManagerName);
+		 		
+		 		// parse CustomersList
+		 		Node customersListNode = customerGroupElement.getElementsByTagName("Customers").item(0);
+				Element customersElement = (Element) customersListNode;
+				
+				// parse Customer
+				for (int n = 0; n < customersElement.getElementsByTagName("Customer").getLength(); n++) {
+					Node customerNode = customersElement.getElementsByTagName("Customer").item(n);
+				 	if (customerNode.getNodeType() == Node.ELEMENT_NODE) {
+				 		Element customerElement = (Element) customerNode;
+				 		String customerName = customerElement.getElementsByTagName("Name").item(0).getTextContent();
+				 		String Vandalism = customerElement.getElementsByTagName("Vandalism").item(0).getTextContent();
+		 				int MinimumDamage = Integer.parseInt(customerElement.getElementsByTagName("MinimumDamage").item(0).getTextContent());
+		 				int MaximumDamage = Integer.parseInt(customerElement.getElementsByTagName("MaximumDamage").item(0).getTextContent());
+		 				
+		 				newCustomerGroup.addCustomer(customerName,Vandalism,MinimumDamage,MaximumDamage);
+				 	}
+				}
+		
+				// parse RentalRequestsList
+		 		Node rentalRequestsListNode = customerGroupElement.getElementsByTagName("RentalRequests").item(0);
+				Element rentalRequestsElement = (Element) rentalRequestsListNode;
+				
+				// parse Request
+				for (int n = 0; n < rentalRequestsElement.getElementsByTagName("Request").getLength(); n++) {
+					Node requestNode = rentalRequestsElement.getElementsByTagName("Request").item(n);
+				 	if (requestNode.getNodeType() == Node.ELEMENT_NODE) {
+				 		Element requestElement = (Element) requestNode;
+				 		String requestID = new StringBuilder("Request #").append(n).toString();
+				 		String Type = requestElement.getElementsByTagName("Type").item(0).getTextContent();
+		 				int Size = Integer.parseInt(requestElement.getElementsByTagName("Size").item(0).getTextContent());
+		 				int Duration = Integer.parseInt(requestElement.getElementsByTagName("Duration").item(0).getTextContent());
+
+		 				newCustomerGroup.addRequest(requestID,Type,Size,Duration);
+				 	}
+				}
+				
+				
 		 	}
 		}
 	}
