@@ -22,9 +22,7 @@ public class Warehouse implements WarehouseInterface {
 	
 	private ArrayList<RepairTool> tools;
 	private ArrayList<RepairMaterial> RepairMaterials;
-	
 	private static Warehouse SAMPLE = null;
-
 	
 	private Warehouse(){
 		tools = new ArrayList<RepairTool>();
@@ -38,8 +36,7 @@ public class Warehouse implements WarehouseInterface {
 	}
 	
 	
-	/**
-	 * this method simulates a maintenance man asking to take what needed for a certain asset repair.
+	/** this method simulates a maintenance man asking to take what needed for a certain asset repair.
 	 * the method calls for the proper tools and do acquire() method.
 	 * @param repairRequirements of the tools and materials needed to be acquired.
 	 */
@@ -50,25 +47,25 @@ public class Warehouse implements WarehouseInterface {
 			int quantity = repairRequirements.isRequired(tool);
 			if (quantity > 0)
 				tool.acquire(quantity);
-		}																// Yoed stop here///////////////////////////////////////
+		}																
 		// acquire materials
-		for (RepairMaterial ingredient : ingredients){
-			int quantity = RepairRequirements.isRequired(ingredient);
+		for (int i = 0 ; i < RepairMaterials.size() ; i++){
+			RepairMaterial material = RepairMaterials.get(i);
+			int quantity = repairRequirements.isRequired(material);
 			if (quantity > 0){
-				ingredient.acquire(quantity);
+				material.acquire(quantity);
 			}
 		}
-	}
+	}													///////Yoed!
 
-	/**
-	 * this method simulates a chef returning the tools used to prepare a dish.
-	 * the method calls for the appropriate tools' release() method.
-	 * @param dish which order was finished and it's tools are released.
+	/** this method returning the tools used by the maintenance man.
+	 * the method call the tool release() method.
+	 * @param repairRequirements of the tools needed to be release.
 	 */
-	public void release(Dish dish) {
-		for (int i = tools.size()-1 ; i >= 0 ; i--){
-			KitchenTool tool = tools.get(i);
-			int quantity = dish.isRequired(tool);
+	public void release(RepairRequirements repairRequirements) {
+		for (int i = 0 ; i < tools.size()  ; i++){
+			RepairTool tool = tools.get(i);
+			int quantity = repairRequirements.isRequired(tool);
 			if (quantity > 0)
 				tool.release(quantity);
 		}
