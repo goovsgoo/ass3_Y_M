@@ -3,7 +3,7 @@ package REIT.pas;
 import java.util.Random;
 
 public class Customer {
-
+/////////////////////////////////////////חסר פה הערות
 	private final String name;
 	private final String vandalismType;
 	private final double minDemage;

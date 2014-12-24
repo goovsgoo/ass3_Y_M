@@ -2,6 +2,8 @@ package REIT.act;
 
 import java.awt.geom.Point2D;
 
+
+import REIT.actives.RunnableChef;
 import REIT.pas.*;
 
 /*
@@ -73,7 +75,7 @@ public class RunnableClerk implements Runnable{
 		while (this.active){
 			try {
 				Asset asset = management.findAssetRequestMathc();					
-				if (asset == Management.DEADEND){
+				if (order == Management.DEADEND){
 					this.shutdown();
 					management.passToAvailableAssets(asset);
 				} else {
@@ -88,7 +90,8 @@ public class RunnableClerk implements Runnable{
 		}
 		Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
-		 
+	
+	 
 	/**
 	 * commits delivery of one order.
 	 * calculates the final reward of this order (by comparing the actual and expected cook time and delivery time).
