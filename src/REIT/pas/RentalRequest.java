@@ -1,5 +1,26 @@
 package REIT.pas;
 
+
+/*2.13 RentalRequest
+Found in: Management
+This object will hold the information of a rental request.
+Fields: (1) Id (2) Asset type (3) Asset size (4) Duration of stay (5) Asset (6) Request status
+1. Asset type: The type of the asset requested by the customer group manager.
+2. Asset size: The size of the asset requested by the customer group manager. Note: The asset to
+be booked can be larger than the requested size. However, be sure to choose the smallest one
+possible of the ones found.
+3. Duration of stay: Duration is in days, where each day is 24 seconds in our simulation process..
+4. Asset: The asset itself. Which was found by the RunnableClerk and will be used by the Runnable-
+CustomerGroupManager.
+5. Request status: One of four possible options:
+(a) Incomplete: If the request has not been handled yet.
+(b) Fulfilled: If the request has been fullled, but the customer has not used it yet.
+(c) InProgress: The customer is occupying the asset currently.
+(d) Complete: The customer has left the asset.
+Note: This object will be sent to CallableSimulateStayInAsset which will simulate the rental process
+of the request.*/ 
+
+
 public class RentalRequest implements Comparable<RentalRequest>{
 	private final String ID;
 	private final String assetType;
