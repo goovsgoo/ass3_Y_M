@@ -5,6 +5,10 @@ import java.lang.Math;
 import java.awt.geom.Arc2D.Double;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.Vector;
+
+import REIT.act.Dish;
+import REIT.act.RunnableCookOneDish;
 
 
 //import restaurant.passives.Order;
@@ -40,7 +44,7 @@ public class Asset implements Comparable<Asset>{
 	final private String TYPE;
 	final private int ID;
 	final private Point2D.Double LOCATION;
-	private HashMap<AssetContent,Integer> AssetContentCollection;	
+	private Vector<AssetContent> assetContentCollection;	
 	private String status;
 	final private int COST;
 	final private int SIZE;
@@ -62,7 +66,7 @@ public class Asset implements Comparable<Asset>{
 		this.SIZE = assetSize;
 		this.LOCATION = location;
 		this.COST = assetCostPerNight;
-		AssetContentCollection = new HashMap<AssetContent, Integer>();
+		assetContentCollection = new Vector<AssetContent>();
 		status="AVAILABLE";
 		health=100;
 	}
@@ -102,15 +106,23 @@ public class Asset implements Comparable<Asset>{
 		else if(status=="UNAVAILABLE")
 			status="AVAILABLE";
 	}
-	
+	/**	
+	 * 	
+	 */
+	protected void fixAsset() {
+		for (int i =0 ; i< assetContentCollection.size(); i++){
+			warehouse.acquire(assetContentCollection);
+		}
+
+	}
 	
 	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */
-	protected void addNewContent(AssetContent content,int repairMultiplier){
+	protected void addNewContent(AssetContent content){
 		if (content == null)
 			throw new RuntimeException("You cannot add null content to asset");
-		if (!AssetContentCollection.containsKey(content)){
-			AssetContentCollection.put(content,new Integer(repairMultiplier));
+		if (!assetContentCollection.contains(content)){
+			assetContentCollection.add(content);
 		}
 	}
 	
@@ -127,7 +139,7 @@ public class Asset implements Comparable<Asset>{
 	/**
 	 * @Override
 	 */
-	@Override
+	@Override												//////need to write again!!!!!!!1
 	public String toString(){
 		StringBuilder printOut = new StringBuilder();
 		printOut.append(ID).append(":/tType: ").append(TYPE).append(",\tStatus: ").append(Status).append(",\tcost: ").append(COST).append(",\tsize: ").append(SIZE).append(",\tlocation: [").append(LOCATION.getX()).append(", ").append(LOCATION.getY()).append("],\t Content in Order: ");
@@ -144,6 +156,20 @@ public class Asset implements Comparable<Asset>{
 	@Override
 	public int compareTo(Asset other) {
 		return this.SIZE - other.SIZE;
+	}
+	
+	/**
+	 * get Content By Name
+	 * @param assetContentName
+	 * @return AssetContent , that equals to the name
+	 */
+	public AssetContent getContentByName(String assetContentName) {
+		int i;
+		for(i = 0;i< assetContentCollection.size() || assetContentCollection.get(i).equals(assetContentName);i++)
+		{}
+		if(assetContentCollection.get(i).equals(assetContentName))
+			return assetContentCollection.get(i);
+		return null;
 	}
 
 }

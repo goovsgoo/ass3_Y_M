@@ -192,7 +192,9 @@ public class Parser {
 				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				int repairMultiplier = Integer.parseInt(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				newAsset.addNewContent(management.getContentByName(assetContentName),repairMultiplier);
+		 				AssetContent tmp = newAsset.getContentByName(assetContentName);
+		 				tmp.updateMultiplier(repairMultiplier);
+		 				newAsset.addNewContent(tmp);
 				 	}
 				 }
 				// add asset to assets in management???????? ~ Yoed

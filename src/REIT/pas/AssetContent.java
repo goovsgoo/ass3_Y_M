@@ -119,4 +119,12 @@ public class AssetContent {
 	public boolean equals(String AssetContentName){
 		return this.NAME.equals(AssetContentName);
 	}
+
+	/**
+	 * update repairMultiplier of content
+	 * @param repairMultiplier2
+	 */
+	public void updateMultiplier(int repairMultiplier2) {
+		repairMultiplier=repairMultiplier2;
+	}
 }

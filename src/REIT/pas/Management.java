@@ -7,6 +7,7 @@ import java.util.logging.SimpleFormatter;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Vector;
 import java.util.concurrent.*;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
@@ -52,7 +53,6 @@ public class Management {
 	private ExecutorService executor;
 	private int counter;
 	private CountDownLatch latch;
-	private ArrayList<RunnableMaintenanceRequest> Maintenance ;
 	
 	/**constructs a new Management object.
 	 */
@@ -60,7 +60,6 @@ public class Management {
 		assets = Assets.sample();
 		warehouse = Warehouse.sample();
 		clerks= new ArrayList<RunnableClerk>();
-		Maintenance = new ArrayList<RunnableMaintenanceRequest>();
 		this.counter = 0;
 		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
 		executor = Executors.newCachedThreadPool();
@@ -125,15 +124,15 @@ public class Management {
 	 */
 	public synchronized void shouldRepair(Asset asset){
 			if (asset.assetHealth()<=65)
-				fix(asset);	
+				callMaintenanceMan(asset);	
 	}
 	/**
-	 * fix the asset
+	 * fix the asset , execute new Maintenance personnel ,A limited number of maintenance personnel
 	 * @param asset , to repair
 	 */
-	public synchronized void fix(Asset asset){
+	public synchronized void callMaintenanceMan(Asset asset){
 		MaintenanceSemaphore.acquire(1);
-		executor.execute(new RunnableMaintenanceRequest())
+		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
 	
 	

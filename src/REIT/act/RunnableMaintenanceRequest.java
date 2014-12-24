@@ -2,9 +2,6 @@ package REIT.act;
 
 import java.util.concurrent.*;
 
-import restaurant.passives.Dish;
-import restaurant.passives.Warehouse;
-
 import REIT.pas.*;
 
 /*
@@ -31,7 +28,7 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	
 	private ExecutorService executor;
 	private boolean active;
-	private Assets assets ;
+	private Asset asset ;
 	private Management management ;
 	private Warehouse warehouse ;
 	final private String NAME;
@@ -40,8 +37,8 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	 * constructs new RunnableMaintenanceRequest object
 	 * @param name
 	 */
-	public RunnableMaintenanceRequest(String name){
-		assets = Assets.sample();
+	public RunnableMaintenanceRequest(String name, Asset assetToFix){
+		asset = assetToFix;
 		management = Management.sample();
 		warehouse = Warehouse.sample();
 		this.active = true;
@@ -53,19 +50,12 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	 * @Override run method.
 	 * simulates the order's distribution between the chefs.
 	 */
-	public void run() {
+	public void run()  {	
+
+		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
+		asset.fixAsset();
 		
-		while (this.active){
-			synchronized (this){
-			
-				management.askForFix(this);
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		//kill avi
 		executor.shutdown();
 		Management.LOGGER.fine(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
@@ -74,7 +64,7 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	 * simulates the cooking process of one order (if willTake method returns true).
 	 * @param order
 	 */
-	public void cook(Order order){
+	public void fix(Order order){
 		Management.LOGGER.info(new StringBuilder(NAME).append(" ACCEPTED ").append(order).toString());
 		this.pressure = order.addPressure(pressure);
 		
@@ -112,34 +102,15 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 		this.notifyAll();
 	}
 	
-	/**
-	 * determines whether the chef will take the order or not
-	 * @param order
-	 * @return true if difficultyRating <= endurance.
-	 * @return false if difficultyRating > endurance.
-	 */
-	public boolean willTake(Order order){
-		if (order == null)
-			return false;
-		return order.checkDifficulty(this.ENDURANCE-this.pressure);
-	}
-	
-	/**
-	 * when difficultyRating > endurance - the chef refuses to take the order.
-	 * @param order
-	 */
-	public void refuse(Order order){
-		Management.LOGGER.info(new StringBuilder(NAME).append(" REFUSED ").append(order).toString());
-	}
 	
 	/**
 	 * when all orders were cooked - shuts down the chefs (update the active field to false).
 	 */
 	public synchronized void shutdown(){
 		if (active){
-			this.active = false;
-			this.notifyAll();
-			Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
+		//	this.active = false;
+		//	this.notifyAll();
+		//	Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
 		}
 	}
 	
