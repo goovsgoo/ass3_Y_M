@@ -6,10 +6,19 @@ import REIT.pas.CustomerGroupDetails;
 
 public class RunnableCustomerGroupManager implements Runnable {
 
+	public RunnableCustomerGroupManager(CustomerGroupDetails myGroup) {
+		group = myGroup;
+	}
+	
 	private CustomerGroupDetails group;
 	
+	/**
+	 * @Override run method.
+	 * simulates a group manager - the staying in the asset and the updates that comes afterwards
+	 */
 	public void run() {
-		while(group.anyMoreRequests()) { // keep runnig until all requests are fullfilled
+		// keep running until all requests are fullfilled
+		while(group.anyMoreRequests()) { 
 
 			// wait for a request to get handled by a clerk
 			while (group.statOfCurrentRequest() == "INCOMPLETE")
