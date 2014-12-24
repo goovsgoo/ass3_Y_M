@@ -29,6 +29,9 @@ public class Warehouse implements WarehouseInterface {
 		RepairMaterials = new ArrayList<RepairMaterial>();
 	}
 	
+	/** this method is a factury method.
+	 *  cares that only once will be initialized an object
+	 */
 	static public Warehouse sample(){
 		if (SAMPLE == null)
 			SAMPLE = new Warehouse();
