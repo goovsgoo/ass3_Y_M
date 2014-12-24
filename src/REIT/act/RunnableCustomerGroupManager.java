@@ -28,9 +28,7 @@ public class RunnableCustomerGroupManager implements Runnable {
 			        } catch (InterruptedException e) {}
 			
 			// wait for stay in asset to end and update asset's total damage and status
-			double damage = group.sleepInAsset();
-			// create damage report
-			
+			group.sleepInAsset();
 			}	
 	}
 }

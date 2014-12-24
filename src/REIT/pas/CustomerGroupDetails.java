@@ -18,7 +18,8 @@ public class CustomerGroupDetails {
 	private final String groupManager;
 	private Vector<RentalRequest> requests;
 	private ArrayList<Customer> customers;
-		
+	private Management management = Management.sample();	
+	
 	public CustomerGroupDetails(String manager) {
 		groupManager = manager;
 		requests = new Vector<RentalRequest>();
@@ -33,7 +34,7 @@ public class CustomerGroupDetails {
 		return customers.add(newGuy);	
 	}
 	
-	public double sleepInAsset() throws InterruptedException, ExecutionException{
+	public void sleepInAsset() throws InterruptedException, ExecutionException{
        	ExecutorService executor = Executors.newCachedThreadPool();
        	CompletionService<Double> ecs = new ExecutorCompletionService<Double>(executor);
        	final int numerOfCustomers = customers.size();
@@ -50,9 +51,9 @@ public class CustomerGroupDetails {
         executor.shutdown();
         updateAsset(totalDamage);
         DamageReport report = new DamageReport();
-        report.assignAsset(sendRequest().);
-        
-        return totalDamage;
+        report.assignAsset(sendRequest().linked());
+        report.updateDamage(totalDamage);
+        management
 	}
 	
 	private void updateAsset(double damage) {

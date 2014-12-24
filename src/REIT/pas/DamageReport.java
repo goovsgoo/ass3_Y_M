@@ -4,7 +4,7 @@ public class DamageReport {
 /////////////////////////////////////////חסר פה הערות
 
 	private Asset asset;
-	private int damagePercentage;
+	private double damagePercentage;
 	
 	public DamageReport() {
 		asset = null;
@@ -15,7 +15,7 @@ public class DamageReport {
 		asset = theAsset;
 	}
 	
-	protected void updateDamage(int damage) {
+	protected void updateDamage(double damage) {
 		damagePercentage = damage;
 	}
 	
