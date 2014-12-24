@@ -1,5 +1,5 @@
 package REIT.pas;
-import REIT.active.*;
+import REIT.act.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -16,12 +16,12 @@ import java.io.IOException;
  */
 public class Parser {
 	
-	private static Management management = Management.instance();
-	private static Warehouse warehouse = Warehouse.instance();
+	private static Management management = Management.sample();
+	private static Warehouse warehouse = Warehouse.sample();
 	private static RepairTool repairTool;
 	private static RepairMaterial repairMaterial;
 	private static RunnableClerk runnableClerk;
-	//private static RunnableDeliveryPerson runnableDeliverer;
+
 
 	/**
 	 * parse the files that gets from Driver class.		

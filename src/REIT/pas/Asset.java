@@ -44,7 +44,7 @@ public class Asset implements Comparable<Asset>{
 	final private int COST;
 	final private int SIZE;
 	
-	private Management management = Management.instance();
+	private Management management = Management.sample();
 	
 	
 	/**

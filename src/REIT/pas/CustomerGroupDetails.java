@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 
 import REIT.act.CallableSimulateStayInAsset;
 
+/////////////////////////////////////////חסר פה הערות
 
 public class CustomerGroupDetails {
 	private final String groupManager;
