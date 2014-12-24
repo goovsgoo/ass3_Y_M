@@ -2,6 +2,8 @@ package REIT.act;
 
 import java.awt.geom.Point2D;
 
+import restaurant.actives.RunnableChef;
+
 import REIT.pas.*;
 
 /*
@@ -43,7 +45,7 @@ It will simulate retrieving a new order to deliver as follows:
   Repeat cycle. The delivery person will shutdown only when a shutdown request is received.
  */
 
-public class RunnableClerk implements Runnable {
+public class RunnableClerk implements Runnable{
 	final private String NAME; 
 	private Point2D.Double location;
 	// final private double SPEED; 

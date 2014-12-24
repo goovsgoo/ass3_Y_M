@@ -31,6 +31,7 @@ public class Warehouse implements WarehouseInterface {
 	
 	/** this method is a factury method.
 	 *  cares that only once will be initialized an object
+	 *  @return sample of Warehouse
 	 */
 	static public Warehouse sample(){
 		if (SAMPLE == null)

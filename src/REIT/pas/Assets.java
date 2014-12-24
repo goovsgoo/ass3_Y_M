@@ -1,5 +1,6 @@
 package REIT.pas;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.*;
@@ -26,6 +27,7 @@ public class Assets{
 	
 	/** this method is a factury method.
 	 *  cares that only once will be initialized an object
+	 * @return sample of Assets
 	 */
 	static public Assets sample(){
 		if (SAMPLE == null)
@@ -49,13 +51,26 @@ public class Assets{
 	}
 	
 	/**
-	 * 
+	 * find a min size asset for the requests size.
+	 * @param sizeOfAsset, size of asset by the amount of people 
 	 */
-	public void FindFitRequest(int sizeOfAsset){
-		    Iterator<Asset> i = AssetsCollection.iterator();
-		    while (i.hasNext()) {
-		      i.
-		}
+	public Asset FindFitRequest(int sizeOfAsset){
+		   int index;
+		for(index=0;
+			(AssetsCollection.get(index).assetSize()>= sizeOfAsset) || (index < AssetsCollection.size() ) ;
+			index++){}
+			if (AssetsCollection.get(index).assetSize()>=sizeOfAsset)
+				return AssetsCollection.get(index);
+			return null;
+		
+	}
+		
+	/**
+	 * sort the assat by size
+	 * @param sizeOfAsset, size of asset by the amount of people 
+	 */
+	public void sort(){
+		Collections.sort(AssetsCollection);
 	}
 
 }
