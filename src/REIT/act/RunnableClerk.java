@@ -99,7 +99,7 @@ public class RunnableClerk implements Runnable {
 		// order.deliver();
 		// calculate distance from REIT to asset
 		int distance = calculateDistance(asset);
-		checking(distance);
+		long timeToFullFulfil = checking(distance);
 		Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	
@@ -107,8 +107,9 @@ public class RunnableClerk implements Runnable {
 	 * calculates the ACTUAL time to deliver an order from to the restaurant to the customer.
 	 * @return actualDeliveryTime in milliseconds.
 	 */
-	public void checking(int distance){
-		// deliveryStartTime = System.currentTimeMillis();
+	public long checking(int distance){
+		// TODO do we calculate the time like that????????????
+		long startTime = System.currentTimeMillis();
 		
 		try {
 			Thread.sleep(distance);
@@ -117,7 +118,7 @@ public class RunnableClerk implements Runnable {
 			e.printStackTrace();
 		}
 		
-		// deliveryFinishTime = System.currentTimeMillis();
+		long finishTime = System.currentTimeMillis();
 			
 		try {
 			Thread.sleep(distance);
@@ -125,6 +126,8 @@ public class RunnableClerk implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return (finishTime - startTime);  
 	}
 	
 
