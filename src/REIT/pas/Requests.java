@@ -50,7 +50,7 @@ public class Requests{
 	 * 
 	 */
 	public FindFitRequest(int sizeOfAsset){
-		rentalRequestCollection;
+		for(int i = 0; i< rentalRequestCollection
 	}
 	
 
