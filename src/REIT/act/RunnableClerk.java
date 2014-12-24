@@ -2,8 +2,6 @@ package REIT.act;
 
 import java.awt.geom.Point2D;
 
-
-import REIT.actives.RunnableChef;
 import REIT.pas.*;
 
 /*
@@ -51,7 +49,7 @@ public class RunnableClerk implements Runnable{
 	// final private double SPEED; 
 	// private Statistics rewardStatistics = Statistics.instance();
 	private boolean active;
-	private Management management = Management.instance();
+	private Management management = Management.sample();
 
 	
 	/**
@@ -75,7 +73,7 @@ public class RunnableClerk implements Runnable{
 		while (this.active){
 			try {
 				Asset asset = management.findAssetRequestMathc();					
-				if (order == Management.DEADEND){
+				if (asset == Management.DEADEND){
 					this.shutdown();
 					management.passToAvailableAssets(asset);
 				} else {
