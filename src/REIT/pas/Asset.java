@@ -2,6 +2,7 @@ package REIT.pas;
 
 import java.util.concurrent.*;
 import java.lang.Math;
+import java.awt.geom.Arc2D.Double;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 
@@ -40,9 +41,11 @@ public class Asset implements Comparable<Asset>{
 	final private int ID;
 	final private Point2D.Double LOCATION;
 	private HashMap<AssetContent,Integer> AssetContentCollection;	
-	private String Status;
+	private String status;
 	final private int COST;
 	final private int SIZE;
+	private double health;
+	
 	
 	private Management management = Management.sample();
 	
@@ -62,6 +65,8 @@ public class Asset implements Comparable<Asset>{
 		this.LOCATION = location;
 		this.COST = assetCostPerNight;
 		AssetContentCollection = new HashMap<AssetContent, Integer>();
+		status="AVAILABLE";
+		health=100;
 	}
 		
 	/**
@@ -71,14 +76,44 @@ public class Asset implements Comparable<Asset>{
 	protected int assetSize() {
 		return SIZE;
 	}
+	/**
+	 * show health of asset
+	 * @return health
+	 */
+	protected double assetHealth() {
+		return health;
+	}
+	
+	/**
+	 * Estimate the break of the house after a group of renters gone
+	 */
+	protected void breakThehouse(double demage) {
+		health = health - demage;
+	}
+	
+	/**
+	 * Updates the state of the house, according to the order
+	 */
+	protected void updateStatus() {
+		if(status=="AVAILABLE")
+			status="BOOKED";
+		else if(status=="BOOKED")
+			status="OCCUPIED";
+		else if(status=="OCCUPIED")
+			status="UNAVAILABLE";
+		else if(status=="UNAVAILABLE")
+			status="AVAILABLE";
+	}
+	
 	
 	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */
 	protected void addNewContent(AssetContent content,int repairMultiplier){
 		if (content == null)
 			throw new RuntimeException("You cannot add null content to asset");
-		if (!AssetContentCollection.containsKey(content))
-			AssetContentCollection.put(content,new Integer(repairMultiplier));	
+		if (!AssetContentCollection.containsKey(content)){
+			AssetContentCollection.put(content,new Integer(repairMultiplier));
+		}
 	}
 	
 	/**

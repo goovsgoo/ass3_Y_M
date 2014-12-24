@@ -2,70 +2,51 @@ package REIT.act;
 
 import java.util.concurrent.*;
 
+import restaurant.passives.Dish;
+import restaurant.passives.Warehouse;
+
 import REIT.pas.*;
 
 /*
- * 3.3 RunnableChef
-
+ * 4.3 RunnableMaintenanceRequest
 Found in: Management
-
 Note: Must be Runnable.
-
-This object is our third active object. 
-Fields: 
-	(1) Chef Name 
-	(2) Chef Efficiency Rating 
-	(3) Endurance Rating 
-	(4) Current Pressure 
-	(5) Collection of Futures for Orders in Progress 
-	(6) Pool of Threads.
-
-This runnable receives new cook orders from the Management, and depending on dish difficulty,
-endurance rating and current pressure, decides whether to accept or deny the request for cooking the
-order.
-The formula is as follows:
-	if (Dish Difficulty <= Endurance Rating - Current Pressure) then the request is accepted, 
-	and the cooking simulation procedure automatically begins.
-
-Of course, the value of current pressure needs to be increased by the value of dish difficulty.
-
-At any time, the chef may receive a shut down request. If received, the chef will  finish cooking the
-orders he may be working on while denying new requests, once all currently being cooked orders are
-complete, the thread exits.
-
-Once an Order is  finished, the current pressure value needs to be decreased by the value of the
-completed Order difficulty. Then the chef sends the  finished Order to the delivery department queue.
-
-Chef Efficiency Rating can be one of three: (i) Good = 0.9 (ii) Neutral = 1.0 (iii) Bad = 1.1
-Both Chef Endurance Rating and Current Pressure are of an integer type.
+This object will hold the current elds: (1) Collection of RepairToolInformation (2) Collection of
+RepairMaterialInformation (3) Asset (4) Warehouse.
+From the Asset, we retrieve the damaged contents. An asset content item is damaged if its health
+is below 65%. Then, the total repair cost in time, is calculated, where for each item the percentage
+of the damage is multiplied by the repairCost multiplier found in the AssetContent. Then:
+1. Acquire the required repair tools and their quantity. Note: The warehouse will always have
+enough tools.
+6
+2. Acquire the required repair materials and their quantity. Note: The warehouse will always have
+enough materials
+3. Sleep the cost in milliseconds after rounding it to nearest long.
+4. Release the acquired repair tools.
+(a) Mark Asset xed. By returning the health of all its contents to 100.
+You generate one RunnableMaintenanceRequest per damaged asset.
  */
 
 public class RunnableMaintenanceRequest implements Runnable, Comparable<RunnableMaintenanceRequest> {
 	
-	final private String NAME;
-	final private double EFFICIENCY;
-	final private int ENDURANCE;
-	private int pressure;
 	private ExecutorService executor;
 	private boolean active;
-	private Management management = Management.instance();
+	private Assets assets ;
+	private Management management ;
+	private Warehouse warehouse ;
+	final private String NAME;
 
 	/**
-	 * constructs a new RunnableChef object using a name, efficiency, endurance and pressure, an active field and executor.
+	 * constructs new RunnableMaintenanceRequest object
 	 * @param name
-	 * @param efficiency
-	 * @param endurance 
-	 * @param pressure
-	 * @param active - true if the chef is active (if not shut down).
-	 * @param executor
 	 */
-	public RunnableMaintenanceRequest(String name, double rate, int endurance){
-		this.NAME = name;
-		this.EFFICIENCY = rate;
-		this.ENDURANCE = endurance; 
-		this.pressure = 0;
+	public RunnableMaintenanceRequest(String name){
+		assets = Assets.sample();
+		management = Management.sample();
+		warehouse = Warehouse.sample();
 		this.active = true;
 		executor = Executors.newCachedThreadPool();
+		this.NAME = name;
 	}
 	
 	/**
@@ -77,11 +58,10 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 		while (this.active){
 			synchronized (this){
 			
-				management.askForOrder(this);
+				management.askForFix(this);
 				try {
 					this.wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

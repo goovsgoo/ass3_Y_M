@@ -40,6 +40,7 @@ public class Management {
 	private Assets assets;
 	private Warehouse warehouse;
 	private ArrayList<RunnableClerk> clerks;
+	private Semaphore MaintenanceSemaphore;
 	private ArrayList<CustomerGroupDetails> customerGroupDetails;
 	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
 	static public Logger LOGGER;
@@ -58,6 +59,7 @@ public class Management {
 		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
 		executor = Executors.newCachedThreadPool();
 		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
+		MaintenanceSemaphore = new Semaphore(5, true);
 		
 		try {
 			LOGGER = Logger.getLogger(Management.class.getName());
@@ -92,8 +94,8 @@ public class Management {
 	public void start(){
 		//Collections.sort(assets);
 		assets.sort();											
-		LOGGER.info("Simulation Session Started.");				//Yoed~~~~~~~~~~~~~~
-		
+		LOGGER.info("Simulation Session Started.");				
+		/*
 		for (RunnableMaintenanceRequest chef : chefs){
 			executor.execute(chef);
 		}
@@ -108,134 +110,26 @@ public class Management {
 			e.printStackTrace();
 		}
 		shutdown();
-		
+		*/
 	}
 	
 	/**
-	 * simulates the order's distribution between chefs.
-	 * @param chef
+	 * Checks whether this house needed repair
+	 * @param asset , to repair
 	 */
-	public synchronized void askForOrder(RunnableMaintenanceRequest chef){
-		for (int i = 0 ; i < orders.size() ; i++){
-			Order order = orders.get(i);
-			if (chef.willTake(order)){
-				chef.cook(order);
-				orders.remove(i);
-				i--;
-			} else {
-				chef.refuse(order);
-			}
-		}
+	public synchronized void shouldRepair(Asset asset){
+			if (asset.assetHealth()<=65)
+				fix(asset);	
+	}
+	/**
+	 * fix the asset
+	 * @param asset , to repair
+	 */
+	public synchronized void fix(Asset asset){
+			
 	}
 	
-	/**
-	 * set the restaurant coordinates to Point2D.Double object.
-	 * @param x
-	 * @param y
-	 */
-	protected void coordinatesSetter(double x, double y){
-		this.restaurantAddress.x = x;
-		this.restaurantAddress.y = y;
-	}
 	
-	/**
-	 * send the restaurant address to an Order.
-	 * @param order - the specific order that accepts the address.
-	 */
-	public void sendAddress(Order order){
-		order.updateAddress(restaurantAddress.getX(), restaurantAddress.getY());
-	}
-	
-	/**
-	 * adds new chef to chefs arrayList.
-	 * @param newChef
-	 */
-	protected void addChef(RunnableMaintenanceRequest newChef){
-		chefs.add(newChef);
-	}
-	
-	/**
-	 * adds new delivery person to deliveryPersons arrayList.
-	 * @param newDeliverer
-	 */
-	protected void addDeliveryPerson(RunnableDeliveryPerson newDeliverer){
-		deliveryPersons.add(newDeliverer);
-	}
-	
-	/**
-	 * adds new dish to menu arrayList
-	 * @param newDish
-	 */
-	protected void addDish(Dish newDish){
-		menu.add(newDish);
-	}
-	
-	/**
-	 * finds a dish in the menu by his name.
-	 * @param dishName
-	 * @return if finds it- returns the Dish object that was found. else- returns null.
-	 */
-	protected Dish getDishByName(String dishName){
-		for (Dish dish : menu){
-			if (dish.equals(dishName)){
-				return dish;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * adds a new order to orders PriorityBlockingQueue
-	 * if the order to add is not a KILLER order (doesn't shut down the simulation) - add it also to Statistics and logger. 
-	 * adds 1 to counter
-	 * @param newOrder
-	 */
-	public synchronized void addOrder(Order newOrder){
-		if (newOrder != KILLER){
-			LOGGER.fine("order added.");
-			Statistics.instance().addOrder(newOrder);
-		}
-		orders.add(newOrder);
-		counter++;
-	}
-	
-	/**
-	 * retrieves (without remove) the head of deliveries PriorityBlockingQueue.
-	 * @return the head of the queue.
-	 */
-	public Order checkDeliver(){
-		return deliveries.peek();
-	}
-	
-
-	/**
-	 * passes a completed order to deliveries PriorityBlockingQueue.
-	 * if a KILLER order - doesn't write to logger.
-	 * @param order
-	 */
-	public void passToDelivery(Order order){
-		if (order != KILLER)
-			LOGGER.info(new StringBuilder("passing order to delivery:\n").append(order).toString());
-		deliveries.offer(order);
-	}
-	
-	/**
-	 * retrieves and remove the head of deliveries PriorityBlockingQueue.
-	 * @return the Order at the head of the queue. 
-	 * @throws InterruptedException
-	 */
-	public Order takeDelivery() throws InterruptedException{
-		Order order = deliveries.take();
-		return order;
-	}
-	
-	/**
-	 * decrements the count of the latch, releasing all waiting threads if the count reaches zero.
-	 * @param order
-	 */
-	public void report(Order order){
-	//	latch.countDown();
-	}
 	
 	/**
 	 * shuts down the chefs and delivery persons when the simulation has finished.

@@ -18,5 +18,8 @@ public class DamageReport {
 	public void updateDamage(int damage) {
 		damagePercentage = damage;
 	}
+	public void updateDamage(int damage) {
+		damagePercentage = damage;
+	}
 	
 }
