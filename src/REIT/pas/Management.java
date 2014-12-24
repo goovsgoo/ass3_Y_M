@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.*;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import restaurant.actives.RunnableDeliveryPerson;
+
 import REIT.act.*;
 
 /*
@@ -48,6 +52,7 @@ public class Management {
 	private ExecutorService executor;
 	private int counter;
 	private CountDownLatch latch;
+	private ArrayList<RunnableMaintenanceRequest> Maintenance ;
 	
 	/**constructs a new Management object.
 	 */
@@ -55,6 +60,7 @@ public class Management {
 		assets = Assets.sample();
 		warehouse = Warehouse.sample();
 		clerks= new ArrayList<RunnableClerk>();
+		Maintenance = new ArrayList<RunnableMaintenanceRequest>();
 		this.counter = 0;
 		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
 		executor = Executors.newCachedThreadPool();
@@ -126,7 +132,8 @@ public class Management {
 	 * @param asset , to repair
 	 */
 	public synchronized void fix(Asset asset){
-			
+		MaintenanceSemaphore.acquire(1);
+		executor.execute(new RunnableMaintenanceRequest())
 	}
 	
 	
