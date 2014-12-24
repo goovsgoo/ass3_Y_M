@@ -64,7 +64,13 @@ public class Asset implements Comparable<Asset>{
 		AssetContentCollection = new HashMap<AssetContent, Integer>();
 	}
 		
-	
+	/**
+	 * return the asset size.
+	 * @return asset size.
+	 */
+	protected int assetSize() {
+		return SIZE;
+	}
 	
 	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */

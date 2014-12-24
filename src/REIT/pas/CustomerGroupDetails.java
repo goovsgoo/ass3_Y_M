@@ -1,11 +1,12 @@
 package REIT.pas;
 
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class CustomerGroupDetails {
 	private final String groupManager;
-	private PriorityBlockingQueue<RentalRequest> requests;
+	private Vector<RentalRequest> request;
 	private ArrayList<Customer> customers;
 		
 	public CustomerGroupDetails(String manager) {
