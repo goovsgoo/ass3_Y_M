@@ -94,7 +94,7 @@ public class Management {
 		assets.sort();											
 		LOGGER.info("Simulation Session Started.");				//Yoed~~~~~~~~~~~~~~
 		
-		for (RunnableChef chef : chefs){
+		for (RunnableMaintenanceRequest chef : chefs){
 			executor.execute(chef);
 		}
 		for (RunnableDeliveryPerson deliverer : deliveryPersons){
@@ -115,7 +115,7 @@ public class Management {
 	 * simulates the order's distribution between chefs.
 	 * @param chef
 	 */
-	public synchronized void askForOrder(RunnableChef chef){
+	public synchronized void askForOrder(RunnableMaintenanceRequest chef){
 		for (int i = 0 ; i < orders.size() ; i++){
 			Order order = orders.get(i);
 			if (chef.willTake(order)){
@@ -150,7 +150,7 @@ public class Management {
 	 * adds new chef to chefs arrayList.
 	 * @param newChef
 	 */
-	protected void addChef(RunnableChef newChef){
+	protected void addChef(RunnableMaintenanceRequest newChef){
 		chefs.add(newChef);
 	}
 	

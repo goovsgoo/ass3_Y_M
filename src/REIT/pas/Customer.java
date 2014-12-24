@@ -1,7 +1,7 @@
 package REIT.pas;
 
 public class Customer {
-
+/////////////////////////////////////////חסר פה הערות
 	private final String name;
 	private final String vandalismType;
 	private final int minDemage;

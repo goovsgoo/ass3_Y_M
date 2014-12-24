@@ -2,8 +2,8 @@ package REIT.act;
 
 import java.awt.geom.Point2D;
 
-import restaurant.actives.RunnableChef;
 
+import REIT.actives.RunnableChef;
 import REIT.pas.*;
 
 /*

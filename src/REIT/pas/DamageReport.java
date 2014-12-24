@@ -1,6 +1,7 @@
 package REIT.pas;
 
 public class DamageReport {
+/////////////////////////////////////////חסר פה הערות
 
 	private Asset asset;
 	private int damagePercentage;

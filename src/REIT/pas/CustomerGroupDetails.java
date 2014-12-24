@@ -3,7 +3,7 @@ package REIT.pas;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
-
+/////////////////////////////////////////חסר פה הערות
 public class CustomerGroupDetails {
 	private final String groupManager;
 	private Vector<RentalRequest> request;
