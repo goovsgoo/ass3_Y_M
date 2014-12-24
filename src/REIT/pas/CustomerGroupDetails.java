@@ -3,7 +3,6 @@ package REIT.pas;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -49,16 +48,17 @@ public class CustomerGroupDetails {
             totalDamage += (double) ecs.take().get();
         }        
         executor.shutdown();
+        
         updateAsset(totalDamage);
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
-        management
+        management.shouldRepair(sendRequest().linked());
 	}
 	
 	private void updateAsset(double damage) {
 		requests.firstElement().updateStatus("InProgress");
-		whereAreWe().braekTheHouse(damage);
+		whereAreWe().breakThehouse(damage);
 	}
 	
 	public Asset whereAreWe() {
