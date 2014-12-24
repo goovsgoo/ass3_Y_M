@@ -1,4 +1,4 @@
-package REIT.testing; 
+package REIT.pas; 
 
 /*
  *
@@ -19,9 +19,9 @@ public interface WarehouseInterface {
 
 	
 	//maintenance man asking to take stuff that needed for a repair.
-	public void acquireTool(RepairRequirements repairRequirements);
+	public void acquire(AssetContent assetContent);
 	
 	//maintenance man returning the stuff used for repair.
-	public void releaseTool(RepairRequirements repairRequirements);
+	public void release(AssetContent assetContent);
 
 }
