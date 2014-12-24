@@ -1,6 +1,7 @@
 package REIT.pas;
 
 import java.util.concurrent.*;
+import java.util.Comparator;
 //import java.lang.Math;
 //import java.awt.geom.Point2D;
 //import java.util.HashMap;
@@ -21,12 +22,13 @@ public class Requests{
 	private PriorityBlockingQueue<RentalRequest> rentalRequestCollection;	 //by size
 	//private Management management = Management.instance();
 	private static Requests SAMPLE = null;
+	 Comparator<RentalRequest> comparatorSize = new SizeComparator();
 	
 	/**
 	 * constructs a new Asset object by name.
 	 */
 	private Requests(){
-		rentalRequestCollection = new PriorityBlockingQueue<RentalRequest>();
+		rentalRequestCollection = new PriorityBlockingQueue<RentalRequest>(32767,comparatorSize);
 	}
 	
 	/** this method is a factury method.
@@ -49,10 +51,14 @@ public class Requests{
 	/**
 	 * 
 	 */
-	public FindFitRequest(int sizeOfAsset){
-		for(int i = 0; i< rentalRequestCollection
-	}
+	//public void FindFitRequest(int sizeOfAsset){
+	//	for(int i = 0;  && i< rentalRequestCollection.size();i++){
+	//		
+	//	}
+	//}
 	
 
 
 }
+
+

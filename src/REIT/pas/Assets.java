@@ -1,5 +1,7 @@
 package REIT.pas;
 
+import java.util.Iterator;
+import java.util.Vector;
 import java.util.concurrent.*;
 //import java.lang.Math;
 //import java.awt.geom.Point2D;
@@ -18,7 +20,7 @@ There are two objects to tasks for this class:
  * this class simulates an Assets.
  */
 public class Assets{
-	private PriorityBlockingQueue<Asset> AssetsCollection;	 //by size
+	private Vector<Asset> AssetsCollection;	 //by size
 	//private Management management = Management.instance();
 	private static Assets SAMPLE = null;
 	
@@ -35,7 +37,7 @@ public class Assets{
 	 * constructs a new Asset object by name.
 	 */
 	private Assets(){
-		AssetsCollection = new PriorityBlockingQueue<Asset>();
+		AssetsCollection = new Vector<Asset>();
 	}
 																		
 	/**adds new Content and repairMultiplier to the AssetContentCollection
@@ -43,9 +45,17 @@ public class Assets{
 	protected void addNewAsset(Asset NewAsset){
 		if (NewAsset == null)
 			throw new RuntimeException("You cannot add null asset to assets");
-		AssetsCollection.put(NewAsset);	
+		AssetsCollection.add(NewAsset);	
 	}
 	
-
+	/**
+	 * 
+	 */
+	public void FindFitRequest(int sizeOfAsset){
+		    Iterator<Asset> i = AssetsCollection.iterator();
+		    while (i.hasNext()) {
+		      i.
+		}
+	}
 
 }
