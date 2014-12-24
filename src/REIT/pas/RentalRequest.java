@@ -19,12 +19,28 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		this.groupManager = manager;
 	}
 	
+	/**
+	 * updates the request's status
+	 * @param newStatus, the up to date status of the request.
+	 */
 	public void updateStatus(String newStatus) {
 		this.status = newStatus;
 	}
-	
+
+	/**
+	 * assign an asset to request upon finding one
+	 * @param assetFound, the appropriate asset to fulfill the request.
+	 */
 	public void LinkAsset(Asset assetFound) {
 		this.assetLinked = assetFound;
+	}
+	
+	/**
+	 * the minimum asset size to fulfill the request.
+	 * @return minimum number of rooms in the requested asset 
+	 */
+	public int minSizeRequested() {
+		return assetSize;
 	}
 	
 	// Overriding the compareTo method
