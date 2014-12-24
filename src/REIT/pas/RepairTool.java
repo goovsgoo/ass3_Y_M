@@ -27,17 +27,18 @@ public class RepairTool {
 	 * @param quantity
 	 * @param Semaphore
 	 */
+	public RepairTool(String name, int quantity){
+		this.NAME = name;
+		this.QUANTITY = quantity;
+		RepairToolSemaphore = new Semaphore(quantity, true);
+	}
+	
 	public RepairTool(){
 		NAME = "";
 		QUANTITY = 0;
 		RepairToolSemaphore = new Semaphore(QUANTITY, true);
 	}
 	
-	public RepairTool(String name, int quantity){
-		this.NAME = name;
-		this.QUANTITY = quantity;
-		RepairToolSemaphore = new Semaphore(quantity, true);
-	}
 	
 	/**
 	 * compares between this.name and a String.
@@ -69,8 +70,8 @@ public class RepairTool {
 	}
 
 	/**
-	 * releases a RepairTool (= Semaphore's permit) after finished using .
-	 * @param numOfPermits - number of permits that are released.
+	 * releases a RepairTool after finish use
+	 * @param numOfPermits, number of permits that are released.
 	 */
 	protected void release(int numOfTools){
 		RepairToolSemaphore.release(numOfTools);

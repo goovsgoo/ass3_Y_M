@@ -25,6 +25,8 @@ the higher the time it takes to repair. Health begins at 100, can be fractions, 
 
 public class AssetContent {
 	final private String NAME;
+	private int repairMultiplier;
+	//private int health;
 	private HashMap<String, Integer> materials;
 	private HashMap<String, Integer> tools;
 	
@@ -34,6 +36,8 @@ public class AssetContent {
 	 * @param name of assetContent.
 	 */
 	public AssetContent(String name){
+		repairMultiplier=1;
+		//health=100;
 		this.NAME = name;
 		tools = new HashMap<String, Integer>();
 		materials = new HashMap<String, Integer>();
