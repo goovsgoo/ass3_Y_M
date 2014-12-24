@@ -1,179 +1,283 @@
 package REIT.pas;
 
+import java.lang.Math;
+//import java.awt.Point;
+import java.awt.geom.Point2D;
+//import java.util.Date;
 import java.util.HashMap;
+//import java.util.Vector;
+import java.util.concurrent.*;
+
+import restaurant.passives.Dish;
+
+//import restaurant.actives.RunnableCookOneDish;
+
 
 /*
- * 2.1 Dish
-
-Found in: Menu
-
-This object will hold information of a single dish. This object can be stored in the restaurant's
-
-menu and can be used in different dish and dish order-related operations.
-
-A Dish object will hold the following information: 
-	(1) Dish Name 
-	(2) Dish Cook Time 
-	(3) Collection of Dish Ingredients
-	(4) Collection of Required Kitchen Tools 
-	(5) Difficulty Rating 
-	(6) Reward.
-
-Each dish has different difficulty rating which will affect the distribution of the different OrderOfDish to the different chefs.
-Detailed explanation below. A dish also requires a collection of exhaustible ingredients and different kitchen tools,
-in order to successfully simulate the cooking procedure.
-
-2.1 Asset
-
+ * 2.1 Asset
 Found in: Management
 This object will hold information of a single asset.
-An asset object must hold the following elds: (1) Name (2) Type (3) Location (4) Collection of
+An asset object must hold the following fields: (1) Name (2) Type (3) Location (4) Collection of
 AssetContent (5) Status (6) Cost per night (7) Size
-1
-1. Type: The type will be one of a list of types provided as an input le.
+
+1. Type: The type will be one of a list of types provided as an input file.
 2. Location: Coordinates are to be stored as (x,y) coordinates in two dimensional space. The
-distance is to be calculated as the Euclidean distance between two dierent coordinates.
-3. Status: One of three dierent options: (i) AVAILABLE (ii) BOOKED (iii) OCCUPIED (iv)
+distance is to be calculated as the Euclidean distance between two different coordinates.
+3. Status: One of three different options: (i) AVAILABLE (ii) BOOKED (iii) OCCUPIED (iv)
 UNAVAILABLE. Where the asset is vacant if it is not currently being used. Booked, where the
 asset has been booked by a customer group but not occupied yet. Occupied, if the properly is
 currently being used by a customer, and unavailable if the asset is not t for renting, as long it is
-not repaired. Repairing a asset requires a collection of exhaustible repair materials, and dierent
+not repaired. Repairing a asset requires a collection of exhaustible repair materials, and different
 repair tools, and will be detailed later on.
 4. Size: How many people the asset can t in.
  */
 
-/**
- * 
- * @author Itai Sanders
- * this class simulates a dish.
- *
+/** 
+ * @author Meni & Yoed
+ * this class simulates an Asset.
  */
-public class Asset {
-	final private String NAME;
-	final private int COOK_TIME;
-	final private int DIFFICULTY;
-	final private int REWARD;
-	private HashMap<String, Integer> ingredients;
-	private HashMap<String, Integer> tools;
+public class Asset implements Comparable<Asset>{
+
+	final private String TYPE;
+	final private int ID;
+	final private Point2D.Double LOCATION;
+	private HashMap<AssetContent,Integer> AssetContentCollection;	
+	final private String STATUS;
+	final private int COST;
+	final private int SIZE;
+	
+	private Management management = Management.instance();
+	
 	
 	/**
-	 * the Dish constructor creates a Dish object with a given name, cooking time, difficulty and reward.
-	 * the constructor also creates two empty ArrayLists, one for Ingredients and one for KitchenTools.
-	 * @param name of dish.
-	 * @param cookTime - time to cook the dish.
-	 * @param difficulty of dish.
-	 * @param reward of dish.
+	 * constructs a new Asset object by name.
+	 * @param id, name of asset
+	 * @param assetType, type of asset
+	 * @param assetSize, size of asset by the amount of people 
+	 * @param location, (x,y) of asset
+	 * @param assetCostPerNight, cost per night
 	 */
-	public Asset(String name, int cookTime, int difficulty, int reward){
-		this.NAME = name;
-		this.COOK_TIME = cookTime;
-		this.DIFFICULTY = difficulty;
-		this.REWARD = reward;
-		
-		ingredients = new HashMap<String, Integer>();
-		tools = new HashMap<String, Integer>();
+	public Asset(int id,String assetType,int assetSize,Point2D.Double location,int assetCostPerNight){
+		this.ID = id;
+		this.TYPE = assetType;
+		this.SIZE = assetSize;
+		this.LOCATION = location;
+		this.COST = assetCostPerNight;
+		AssetContentCollection = new HashMap<AssetContent, Integer>();
 	}
-	
-	/**
-	 * if the new ingredient exists in the dish - adds it's quantity.
-	 * else adds the Ingredient object to the list.
-	 * @param newIngredient to add.
+																		//Yoed!!!!!!!!!!!!!!!!!!
+	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */
-	protected void addIngredient(String name, int quantity){
-		if (!ingredients.containsKey(name))
-			ingredients.put(name, new Integer(quantity));
-		else 
-			ingredients.put(name, new Integer (ingredients.get(name)+quantity));
+	protected void addNewContent(AssetContent content,int repairMultiplier){
+		if (content == null)
+			throw new RuntimeException("You cannot add null content to asset");
+		if (!AssetContentCollection.containsKey(content))
+			AssetContentCollection.put(content,new Integer(repairMultiplier));	
 	}
 	
 	/**
-	 * if the new tool exists in the dish - adds it's quantity.
-	 * else adds the KitchenTool object to the list.
-	 * @param newTool
+	 * add the difficulty of a new dish when we add him to the map.
+	 * @param i- the difficulty of a dish that we get from the method sendDifficulty in Dish class.
 	 */
-	protected void addTool(String name, int quantity){
-		if (!tools.containsKey(name))
-			tools.put(name, new Integer(quantity));
-		else 
-			tools.put(name, new Integer (tools.get(name)+quantity));
+	protected void addDifficulty(int difficulty){
+		difficultyRating += difficulty;
 	}
 	
 	/**
-	 * check's whether a certain Ingredient is required to make the Dish.
-	 * @param checkedIngredient - Ingredient object to be checked.
-	 * @return true - if required.
-	 * @return false - if not required.
-	 */
-	protected int isRequired(RepairMaterial checkedIngredient){
-		if  (ingredients.containsKey(checkedIngredient.toString()))
-			return ingredients.get(checkedIngredient.toString());
-			
-		return 0;
-	}
-	
-	/**
-	 * check's whether a certain KitchenTool is required to make the Dish.
-	 * @param checkedTool - KitchenTool object to be checked.
-	 * @return true - if required.
-	 * @return false - if not required.
-	 */	
-	protected int isRequired(RepairTool checkedTool){
-		if (tools.containsKey(checkedTool.toString()))
-				return tools.get(checkedTool.toString());
-		return 0;
-	}
-	
-	/**
-	 * overrides toString method  
-	 */
-	public String toString(){
-		return this.NAME;
-	}
-	
-	/**
-	 * sends the difficulty of this Dish to Order class (replace getter).
-	 * @param order
-	 */
-	protected void sendDifficulty(Order order){
-		order.addDifficulty(DIFFICULTY);
-	}
-	
-	/**
-	 * sends the cook time of this Dish to Order class (replace getter).
-	 * @param order
-	 * @return cookTime
-	 */
-	protected int sendCookTime(Order order){
-		return COOK_TIME;
-	}
-	
-	/**
-	 * sends the total reward of this Dish to Order class (replace getter).
-	 * multiply it by the quantity of the dish in this order.
-	 * @param order
-	 * @param quantity
-	 */
-	protected void sendReward(Order order, int quantity){
-		order.sumReward(REWARD*quantity);
-	}
-	
-	/**
-	 * simulates the preparation of the dish.
-	 * Thread "goes to sleep" while preparing the dish.
+	 * executes the preparation of the order using CountDownLatch (waits for all dishes in this order).
+	 * calculates the whole order preparation time.
 	 * @param factor- chef's efficiency factor.
 	 * @throws InterruptedException
 	 */
 	public void prepare(double factor) throws InterruptedException{
-		Thread.sleep(Math.round(COOK_TIME*factor));
+		CountDownLatch latch = new CountDownLatch(this.orderOfDish.size());
+		this.cookingStartTime = System.currentTimeMillis();
+
+		Management.LOGGER.finer(new StringBuilder("started cooking ").append(ORDER_ID).append(" at ").append(cookingStartTime).toString());
+		ExecutorService executor = Executors.newFixedThreadPool(this.orderOfDish.size());
+
+		this.orderStatus = "InProgress";
+		Management.LOGGER.info(new StringBuilder(ORDER_ID).append(" is now IN PROGRESS.").toString());
+
+		for (Dish dish : orderOfDish.keySet()){
+			Management.LOGGER.fine(new StringBuilder("cooking ").append(dish).toString());
+			executor.execute(new RunnableCookOneDish(dish, orderOfDish.get(dish), factor, latch));
+		}
+
+		latch.await();
+		Management.LOGGER.fine(new StringBuilder("all dishes of ").append(ORDER_ID).append(" ready.").toString());
+		executor.shutdown();
+		
+		this.cookingFinishTime = System.currentTimeMillis();
+		Management.LOGGER.finer(new StringBuilder("finished cooking ").append(ORDER_ID).append(" at ").append(cookingFinishTime).toString());
+		this.orderStatus = "Complete";
+		Management.LOGGER.info(new StringBuilder(ORDER_ID).append(" is COMPLETE.").toString());
+
+		Management.LOGGER.fine(new StringBuilder("cooking time of ").append(ORDER_ID).append(" = ").append(cookingFinishTime-cookingStartTime).toString());
+	}
+	
+	/**
+	 * calculate the actual cook time using system.currentTimeMillis().
+	 * @return actualCookTime.
+	 */
+	public int actualCookTime(){
+		return (int) (this.cookingFinishTime - this.cookingStartTime);
+	}
+	
+	/**
+	 * compare between the difficulty of this order and the endurance of a chef.  
+	 * @param endurance
+	 * @return true if difficultyRating <= endurance.
+	 * @return false if difficultyRating > endurance.
+	 */
+	public boolean checkDifficulty(int endurance){
+		return this.difficultyRating <= endurance;
+	}
+	
+	/**
+	 * adds the difficultyRating to chef's pressure when he takes this order.
+	 * @param pressure
+	 * @return current pressure.
+	 */
+	public int addPressure(int pressure){
+		return pressure + this.difficultyRating;
+	}
+	
+	/**
+	 * subtracts the difficultyRating from chef's pressure when he finish cooking this order.
+	 * @param pressure
+	 * @return current pressure.
+	 */
+	public int releasePressure(int pressure){
+		return pressure - this.difficultyRating;
+	}
+
+	/**
+	 * @Override compareTo method.
+	 * compare between this difficultyRating and other's.
+	 */
+	public int compareTo(Asset other) {
+		return this.difficultyRating - other.difficultyRating;
+	}
+	
+	/**
+	 * calculates the maximal cook time summing the cookTime of all dishes in this order.
+	 * @return maxCookTime
+	 */
+	public int calcTotalCookTime(){
+		maxCookTime = 0;
+		for (Dish dish : orderOfDish.keySet()){
+			int dishCookTime = dish.sendCookTime(this);
+			 if (dishCookTime > maxCookTime){
+				 maxCookTime = dishCookTime;
+			 }
+		}
+		return maxCookTime;
+	}
+	/**
+	 * gets the dish reward from the method "send reward" in Dish class (replace getter).
+	 * @param reward
+	 */
+	protected void sumReward(int reward){
+		totalReward += reward;
+	}
+	
+	/**
+	 * calculates the total reward of this order summing the reward of all dishes in this order.
+	 * @return totalReward
+	 */
+	public int calcTotalReward(){
+		totalReward = 0;
+		for (Dish dish : orderOfDish.keySet()){
+			dish.sendReward(this, orderOfDish.get(dish));
+		}
+	return totalReward;
+	}
+	
+	/**
+	 * calculates the distance between the restaurant to the customer.
+	 * @return distance
+	 */
+	public int calcDeliveryDistance(){
+		management.sendAddress(this);
+		int distance = (int)(Math.sqrt((y_coordinateOfRestaurant-customerAddress.getY())*(y_coordinateOfRestaurant-customerAddress.getY()) + (x_coordinateOfRestaurant-customerAddress.getX())*(x_coordinateOfRestaurant-customerAddress.getX())));
+		return distance;
+	}
+	
+	/**
+	 * updates the restaurant address from Management class.
+	 * @param x
+	 * @param y
+	 */
+	public void updateAddress(double x, double y){
+		x_coordinateOfRestaurant = x;
+		y_coordinateOfRestaurant = y;
+	}
+	
+	/**	
+	 * calculates the ACTUAL time to deliver an order from to the restaurant to the customer.
+	 * @return actualDeliveryTime in milliseconds.
+	 */
+	public void calcActualDeliveryTime(){
+		deliveryStartTime = System.currentTimeMillis();
+		
+		try {
+			Thread.sleep(this.calcDeliveryDistance());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		deliveryFinishTime = System.currentTimeMillis();
+			
+		try {
+			Thread.sleep(this.calcDeliveryDistance());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * sends actualDeliveryTime to RunnableDeliveryPerson.
+	 * @return actualDeliveryTime.
+	 */
+	public int actualDeliveryTime(){
+		return (int) (this.deliveryFinishTime - this.deliveryStartTime);
+	}
+	
+	/**
+	 * updates the orderStatus to delivered and calculate the delivery time.
+	 */
+	public void deliver(){
+		this.orderStatus = "Delivered";
+		Management.LOGGER.info(new StringBuilder(ORDER_ID).append(" was DELIVERED.").toString());
+
+		this.calcActualDeliveryTime();
 	}
 	
 	/**
 	 * compares between this.name and a String.
-	 * @param dishName- name of the dish to compare.
+	 * @param name- name of the order to compare.
 	 * @return true if the names match.
 	 * @return false if the names don't match.
 	 */
-	public boolean equals(String dishName){
-		return this.NAME.equals(dishName);
+	public boolean equals(String name){
+		return this.ORDER_ID.equals(name);
 	}
+	
+	/**
+	 * overrides toString method.
+	 */
+	public String toString(){
+		StringBuilder printOut = new StringBuilder();
+		printOut.append(ORDER_ID).append(":\tDifficulty: ").append(difficultyRating).append(",\tStatus: ").append(orderStatus).append(",\tCustomer Address: [").append(customerAddress.getX()).append(", ").append(customerAddress.getY()).append("],\t Dishes in Order: ");
+		for (Dish dish : orderOfDish.keySet()){
+			printOut.append(dish.toString()).append("(").append(orderOfDish.get(dish)).append(") ");
+		}
+		return printOut.toString();
+	}
+	
+
+
 }

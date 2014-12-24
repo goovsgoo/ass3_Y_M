@@ -11,7 +11,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
-
+/**  @author Meni & Yoed
+ * this class Parse the XML files.
+ */
 public class Parser {
 	
 	private static Management management = Management.instance();
@@ -173,10 +175,10 @@ public class Parser {
 		 		String assetType = assetElement.getElementsByTagName("Type").item(0).getTextContent();
  				int assetSize = Integer.parseInt(assetElement.getElementsByTagName("Size").item(0).getTextContent());
  				String location = assetElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
-	 			//String location = new StringBuilder("Location #").append(i).toString();	
+	 			//need to be Point2D//String location = new StringBuilder("Location #").append(i).toString();	
  				int assetCostPerNight = Integer.parseInt(assetElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
 
-		 		Asset newAsset = new Asset(assetType,assetSize,location,assetCostPerNight);
+		 		Asset newAsset = new Asset(i,assetType,assetSize,location,assetCostPerNight);
 		 		
 		 	//parse assetContentsList
 			Node assetContentsListNode = assetElement.getElementsByTagName("AssetContents").item(0);
@@ -190,7 +192,7 @@ public class Parser {
 				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				int repairMultiplier = Integer.parseInt(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				newAsset.addNewContent(assetContentName,repairMultiplier);
+		 				newAsset.addNewContent(management.getContentByName(assetContentName),repairMultiplier);
 				 	}
 				 }
 				// add asset to assets in management???????? ~ Yoed
