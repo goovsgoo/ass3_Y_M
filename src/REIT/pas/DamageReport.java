@@ -11,11 +11,11 @@ public class DamageReport {
 		damagePercentage = 0;
 	}
 	
-	public void assignAsset(Asset theAsset) {
+	protected void assignAsset(Asset theAsset) {
 		asset = theAsset;
 	}
 	
-	public void updateDamage(int damage) {
+	protected void updateDamage(int damage) {
 		damagePercentage = damage;
 	}
 	public void updateDamage(int damage) {

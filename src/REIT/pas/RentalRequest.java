@@ -4,12 +4,12 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	private final String ID;
 	private final String assetType;
 	private final int assetSize;
-	private final int stay;
+	private final long stay;
 	private Asset assetLinked;
 	private String status;
 	private String groupManager;
 	
-	public RentalRequest(String id, String type, int size, int duration, String manager) {
+	public RentalRequest(String id, String type, int size, long duration, String manager) {
 		this.ID = id;
 		this.assetType = type;
 		this.assetSize = size;
@@ -27,6 +27,10 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		this.status = newStatus;
 	}
 
+	public long sendStayTime(){
+		return stay;
+	}
+	
 	/**
 	 * assign an asset to request upon finding one
 	 * @param assetFound, the appropriate asset to fulfill the request.
@@ -43,6 +47,13 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		return assetSize;
 	}
 	
+	public String statusReport(){
+		return status;
+	}
+	
+	public Asset linked() {
+		return assetLinked;
+	}
 	// Overriding the compareTo method
 	public int compareTo(RentalRequest other){
 		return this.assetSize - other.assetSize;
