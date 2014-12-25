@@ -40,12 +40,16 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		this.groupManager = manager;
 	}
 	
-	/**
-	 * updates the request's status
-	 * @param newStatus, the up to date status of the request.
-	 */
-	public void updateStatus(String newStatus) {
-		this.status = newStatus;
+	// TODO add comments
+	protected void updateStatus() {
+		if(status=="Incomplete")
+			status="Fulfilled";
+		else if(status=="Fulfilled")
+			status="InProgress";
+		else if(status=="InProgress")
+			status="Complete";
+		else if(status=="Complete")
+			status="Incomplete";
 	}
 
 	public long sendStayTime(){

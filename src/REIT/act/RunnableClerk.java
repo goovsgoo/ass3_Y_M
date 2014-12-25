@@ -67,26 +67,29 @@ public class RunnableClerk implements Runnable{
 	
 	/**
 	 * @Override run method.
-	 * simulates ...
+	 * simulates a clerk recieving asset and matching request and handling them
 	 */	
 	public void run() {
 		while (this.active){
 			try {
-				Asset asset = management.findAssetRequestMathc();					
+				RentalRequest requestMatching = null;
+				while (requestMatching == null) {
+					requestMatching = management.findAssetRequestMatch();
+				}
+				Asset asset = requestMatching.linked();					
 				if (asset == Management.DEADEND){
 					this.shutdown();
 					management.passToAvailableAssets(asset);
 				} else {
-					Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
+					// Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
 					this.goConfirmAsset(asset);
-					management.reportRequestDone(asset);
 				}
 			}
 			catch (InterruptedException e) {
 				//TODO
 			}
 		}
-		Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
+		// Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
 	
 	 
@@ -100,7 +103,7 @@ public class RunnableClerk implements Runnable{
 		// calculate distance from REIT to asset
 		int distance = calculateDistance(asset);
 		long timeToFullFulfil = checking(distance);
-		Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
+		// Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	
 	/**	
