@@ -42,22 +42,22 @@ public class Warehouse implements WarehouseInterface {
 	
 	/** this method simulates a maintenance man asking to take what needed for a certain asset repair.
 	 * the method calls for the proper tools and do acquire() method.
-	 * @param assetContent of the tools and materials needed to be acquired.
+	 * @param assetof the tools and materials needed to be acquired.
 	 * @Override
 	 */
 	@Override
-	public void acquire(AssetContent assetContent) {
+	public void acquire(Asset asset) {
 		// acquire RepairTool
 		for (int i = 0 ; i < tools.size() ; i++){
 			RepairTool tool = tools.get(i);
-			int quantity = assetContent.isNeeded(tool);
+			int quantity = asset.isNeeded(tool);
 			if (quantity > 0)
 				tool.acquire(quantity);
 		}																
 		// acquire materials
 		for (int i = 0 ; i < RepairMaterials.size() ; i++){
 			RepairMaterial material = RepairMaterials.get(i);
-			int quantity = assetContent.isNeeded(material);
+			int quantity = asset.isNeeded(material);
 			if (quantity > 0){
 				material.acquire(quantity);
 			}
@@ -66,14 +66,14 @@ public class Warehouse implements WarehouseInterface {
 	
 	/** this method returning the tools used by the maintenance man.
 	 * the method call the tool release() method.
-	 * @param assetContent of the tools needed to be release.
+	 * @param asset of the tools needed to be release.
 	 * @Override
 	 */
 	@Override
-	public void release(AssetContent assetContent) {
+	public void release(Asset asset) {
 		for (int i = 0 ; i < tools.size()  ; i++){
 			RepairTool tool = tools.get(i);
-			int quantity = assetContent.isNeeded(tool);
+			int quantity = asset.isNeeded(tool);
 			if (quantity > 0)
 				tool.release(quantity);
 		}

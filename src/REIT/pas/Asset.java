@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 
 
 //import restaurant.passives.Order;
@@ -110,15 +112,70 @@ public class Asset implements Comparable<Asset>{
 		else if(status=="UNAVAILABLE")
 			status="AVAILABLE";
 	}
-	/**	
-	 * 	
+	
+	/**
+	 * for maintence man use - take from warehouse all the stuff you need to repair the asset's contents
+	 * calculate the time of the repair
+	 * sleep that time
+	 * release all the tools used back to the warehouse
+	 * @throws InterruptedException 
 	 */
-	protected void fixAsset() {
+	public void fixAsset() throws InterruptedException {
+		warehouse.acquire(this);
+		long cost = calculateCost(); 
+		Thread.sleep(cost);
+		warehouse.release(this);
+		health = 100;
+		updateStatus();
+	}
+	
+	/**
+	 * @return the total cost of repairing the whole asset
+	 */
+	private long calculateCost() {
+		double fixCost = 0;
+		for (AssetContent content : assetContentCollection) {
+			fixCost += content.multiplier()*health;
+		}
+		return (long) fixCost;
+	}
+	
+	/**
+	 * checks how much material is needed for the repair of the asset
+	 * @param testedMaterial - do we need this material
+	 * @return amount of material needed
+	 */
+	protected int isNeeded(RepairMaterial testedMaterial){
+		int needed = 0;
+		for (AssetContent content : assetContentCollection) {
+			if  (content.returnCopyMaterials().containsKey(testedMaterial.toString()))
+				needed += content.returnCopyMaterials().get(testedMaterial.toString());	
+		}
+		return needed;
+	}
+	
+	/**
+	 * checks how much tool is needed for the repair of the asset
+	 * @param testedTool - do we need this tool
+	 * @return amount of tool needed
+	 */
+	protected int isNeeded(RepairTool testedTool){
+		int needed = 0;
+		for (AssetContent content : assetContentCollection) {
+			if (content.returnCopyTools().containsKey(testedTool.toString()))
+				needed = Math.max(needed, content.returnCopyTools().get(testedTool).intValue());	
+		}
+		return needed;
+	}
+	
+	/*
+	public void fixAsset() {
 		for (int i =0 ; i< assetContentCollection.size(); i++){
 			warehouse.acquire(assetContentCollection.get(i));
 		}
 
 	}
+	*/
 	
 	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */
@@ -146,9 +203,9 @@ public class Asset implements Comparable<Asset>{
 	@Override												//////need to write again!!!!!!!1
 	public String toString(){
 		StringBuilder printOut = new StringBuilder();
-		printOut.append(ID).append(":/tType: ").append(TYPE).append(",\tStatus: ").append(Status).append(",\tcost: ").append(COST).append(",\tsize: ").append(SIZE).append(",\tlocation: [").append(LOCATION.getX()).append(", ").append(LOCATION.getY()).append("],\t Content in Order: ");
-		for (AssetContent assetContent : AssetContentCollection.keySet()){
-			printOut.append(assetContent.toString()).append("(").append(AssetContentCollection.get(assetContent)).append(") ");
+		printOut.append(ID).append(":/tType: ").append(TYPE).append(",\tStatus: ").append(status).append(",\tcost: ").append(COST).append(",\tsize: ").append(SIZE).append(",\tlocation: [").append(LOCATION.getX()).append(", ").append(LOCATION.getY()).append("],\t Content in Order: ");
+		for (AssetContent assetContent : assetContentCollection){
+			printOut.append(assetContent.toString()).append("(").append(assetContentCollection.get(assetContent)).append(") ");
 		}
 		return printOut.toString();
 	}

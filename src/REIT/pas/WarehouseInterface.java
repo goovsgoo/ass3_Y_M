@@ -19,9 +19,9 @@ public interface WarehouseInterface {
 
 	
 	//maintenance man asking to take stuff that needed for a repair.
-	public void acquire(AssetContent assetContent);
+	public void acquire(Asset asset);
 	
 	//maintenance man returning the stuff used for repair.
-	public void release(AssetContent assetContent);
+	public void release(Asset asset);
 
 }

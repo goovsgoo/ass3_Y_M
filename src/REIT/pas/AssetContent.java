@@ -121,12 +121,20 @@ public class AssetContent {
 	}
 
 	/**
+	 * @return the repairMultiplier
+	 */
+	public double multiplier() {
+		return repairMultiplier;
+	}
+	
+	/**
 	 * update repairMultiplier of content
 	 * @param repairMultiplier2
 	 */
 	public void updateMultiplier(int repairMultiplier2) {
 		repairMultiplier=repairMultiplier2;
 	}
+	
 	/**
 	 * get copy of list of materials
 	 * @return copyMaterials, copy of HashMap for materials

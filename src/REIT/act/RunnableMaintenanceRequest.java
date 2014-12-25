@@ -24,7 +24,7 @@ enough materials
 You generate one RunnableMaintenanceRequest per damaged asset.
  */
 
-public class RunnableMaintenanceRequest implements Runnable, Comparable<RunnableMaintenanceRequest> {
+public class RunnableMaintenanceRequest implements Runnable {
 	
 	private ExecutorService executor;
 	private boolean active;
@@ -53,53 +53,31 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	public void run()  {	
 
 		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
-		asset.fixAsset();
+		// fix the asset
+		try {
+			asset.fixAsset();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		// update the management that you finish (when all fixes finished we can start new day
+		// TODO - איך עושים את זה?????????????
+		finish();
+				
 		//kill avi
 		executor.shutdown();
 		Management.LOGGER.fine(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
-	
-	/**
-	 * simulates the cooking process of one order (if willTake method returns true).
-	 * @param order
-	 */
-	public void fix(Order order){
-		Management.LOGGER.info(new StringBuilder(NAME).append(" ACCEPTED ").append(order).toString());
-		this.pressure = order.addPressure(pressure);
 		
-		final Future<Order> takenOrder = executor.submit(new CallableCookWholeOrder(order, EFFICIENCY));
-		
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				while (!takenOrder.isDone());
-				
-				try {
-					finish(takenOrder.get());
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	/**
-	 * simulates the process of releasing an order when finished cooking.
-	 * @param order
-	 * @throws InterruptedException
-	 * @throws ExecutionException
+	 * updates the system that we are done
 	 */
-	protected synchronized void finish(Order order) throws InterruptedException, ExecutionException{
-		this.pressure = order.releasePressure(pressure);
-		Management.LOGGER.info(new StringBuilder(NAME).append(" FINISHED COOKING ").append(order).toString());
-		management.passToDelivery(order);
-		this.notifyAll();
+	protected synchronized void finish(){
+		// this.pressure = order.releasePressure(pressure);
+		// Management.LOGGER.info(new StringBuilder(NAME).append(" FINISHED COOKING ").append(order).toString());
+		// management.passToDelivery(order);
+		// this.notifyAll();
 	}
 	
 	
@@ -119,15 +97,6 @@ public class RunnableMaintenanceRequest implements Runnable, Comparable<Runnable
 	 */
 	public String toString(){
 		return this.NAME+" "+active;
-	}
-
-	/**
-	 * @Override compareTo method
-	 * compare between this endurance and other's.
-	 */
-	public int compareTo(RunnableMaintenanceRequest other) {
-		// TODO Auto-generated method stub
-		return this.ENDURANCE - other.ENDURANCE;
 	}
 	
 }
