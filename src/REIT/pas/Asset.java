@@ -5,6 +5,7 @@ import java.lang.Math;
 import java.awt.geom.Arc2D.Double;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import REIT.act.Dish;
@@ -50,8 +51,8 @@ public class Asset implements Comparable<Asset>{
 	final private int SIZE;
 	private double health;
 	private Management management = Management.sample();
-	private HashMap<String, Integer> sumMaterials;
-	private HashMap<String, Integer> sumTools;
+
+	private static Warehouse warehouse = Warehouse.sample();
 	
 	
 	/**
@@ -71,8 +72,8 @@ public class Asset implements Comparable<Asset>{
 		assetContentCollection = new Vector<AssetContent>();
 		status="AVAILABLE";
 		health=100;
-		sumTools = new HashMap<String, Integer>();
-		sumMaterials = new HashMap<String, Integer>();
+
+
 	}
 	
 		
@@ -177,16 +178,5 @@ public class Asset implements Comparable<Asset>{
 		return null;
 	}
 	
-	public void calculateToolsMaterials() {
-		int i;
-		for(i = 0;i< assetContentCollection.size();i++){
-			
-			for(int n = 0;assetContentCollection.get(i).returnCopyTools().containsKey())
-				if (!sumTools.containsKey(name))
-					sumTools.put(name, new Integer(quantity));
-				else 
-					sumTools.put(name, new Integer (sumTools.get(name)+quantity));
-		}
-	}
 	
 }

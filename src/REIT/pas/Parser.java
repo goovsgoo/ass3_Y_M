@@ -140,7 +140,7 @@ public class Parser {
 		 				Element toolElement = (Element) toolNode;
 		 				String toolName = toolElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				int quantity = Integer.parseInt(toolElement.getElementsByTagName("Quantity").item(0).getTextContent());
-		 				
+		 				management.addToolNameToColl(toolName);
 		 				newAssetContent.addTool(toolName, quantity);
 		 			}
 		 		}
@@ -154,7 +154,7 @@ public class Parser {
 		 				Element materialElement = (Element) materialNode;
 		 				String materialName = materialElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				int quantity = Integer.parseInt(materialElement.getElementsByTagName("Quantity").item(0).getTextContent());
-		 				
+		 				management.addMaterialNameToColl(materialName);
 		 				newAssetContent.addMaterial(materialName, quantity);
 		 			}
 		 		}

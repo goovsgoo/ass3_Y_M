@@ -7,7 +7,9 @@ import java.util.logging.SimpleFormatter;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.concurrent.*;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
@@ -54,6 +56,9 @@ public class Management {
 	private ExecutorService executor;
 	private int counter;
 	private CountDownLatch latch;
+	private Vector<String> toolNames;
+	private Vector<String> materialNames;
+
 	
 	/**constructs a new Management object.
 	 */
@@ -66,6 +71,9 @@ public class Management {
 		executor = Executors.newCachedThreadPool();
 		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
 		MaintenanceSemaphore = new Semaphore(5, true);
+		toolNames=new Vector<>();
+		materialNames=new Vector<>();
+		calculateToolsMaterials();
 		
 		try {
 			LOGGER = Logger.getLogger(Management.class.getName());
@@ -178,5 +186,44 @@ public class Management {
 	//	LOGGER.info("End of Simulation.");
 	//	LOGGER.info(Statistics.instance().toString());
 	}
+
+	/**
+	 * Calculate tools and materials names for camper
+	 */
+	private void calculateToolsMaterials() {
+		int i;
+		for(i = 0;i< assetContentCollection.size();i++){
+			
+			HashMap<String, Integer> copyTools = assetContentCollection.get(i).returnCopyTools();
+			HashMap<String, Integer> copyMaterials = assetContentCollection.get(i).returnCopyMaterials();
+
+			for (Entry<String, Integer> entry : copyTools.entrySet()) {
+				if( !toolNames.contains(entry.getKey()) )
+						toolNames.add(entry.getKey());
+			}
+			for (Entry<String, Integer> entry : copyMaterials.entrySet()) {
+				if( !materialNames.contains(entry.getKey()) )
+					materialNames.add(entry.getKey());
+			}
+		}
+	}
+	
+	/**
+	 * Collects all existing material names in the project
+	 * @param materialName
+	 */
+	public void addMaterialNameToColl(String materialName) {
+		if(!materialNames.contains(materialName))
+			materialNames.add(materialName);
+	}
+	/**
+	 * Collects all existing tool names in the project
+	 * @param toolName
+	 */
+	public void addToolNameToColl(String toolName) {
+		if(!toolNames.contains(toolName))
+			toolNames.add(toolName);
+	}
+	
 	
 }
