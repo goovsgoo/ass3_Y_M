@@ -127,4 +127,21 @@ public class AssetContent {
 	public void updateMultiplier(int repairMultiplier2) {
 		repairMultiplier=repairMultiplier2;
 	}
+	/**
+	 * get copy of list of materials
+	 * @return copyMaterials, copy of HashMap for materials
+	 */
+	public HashMap<String, Integer> returnCopyMaterials() {
+		HashMap<String, Integer> copyMaterials = new HashMap<String, Integer>(materials);
+		return copyMaterials;
+	}
+	
+	/**
+	 * get copy of list of tools
+	 * @return copyTools, copy of HashMap for tools
+	 */
+	public HashMap<String, Integer> returnCopyTools() {
+		HashMap<String, Integer> copyTools = new HashMap<String, Integer>(tools);
+		return copyTools;
+	}
 }

@@ -50,6 +50,8 @@ public class Asset implements Comparable<Asset>{
 	final private int SIZE;
 	private double health;
 	private Management management = Management.sample();
+	private HashMap<String, Integer> sumMaterials;
+	private HashMap<String, Integer> sumTools;
 	
 	
 	/**
@@ -69,7 +71,10 @@ public class Asset implements Comparable<Asset>{
 		assetContentCollection = new Vector<AssetContent>();
 		status="AVAILABLE";
 		health=100;
+		sumTools = new HashMap<String, Integer>();
+		sumMaterials = new HashMap<String, Integer>();
 	}
+	
 		
 	/**
 	 * return the asset size.
@@ -111,7 +116,7 @@ public class Asset implements Comparable<Asset>{
 	 */
 	protected void fixAsset() {
 		for (int i =0 ; i< assetContentCollection.size(); i++){
-			warehouse.acquire(assetContentCollection);
+			warehouse.acquire(assetContentCollection.get(i));
 		}
 
 	}
@@ -171,5 +176,17 @@ public class Asset implements Comparable<Asset>{
 			return assetContentCollection.get(i);
 		return null;
 	}
-
+	
+	public void calculateToolsMaterials() {
+		int i;
+		for(i = 0;i< assetContentCollection.size();i++){
+			
+			for(int n = 0;assetContentCollection.get(i).returnCopyTools().containsKey())
+				if (!sumTools.containsKey(name))
+					sumTools.put(name, new Integer(quantity));
+				else 
+					sumTools.put(name, new Integer (sumTools.get(name)+quantity));
+		}
+	}
+	
 }
