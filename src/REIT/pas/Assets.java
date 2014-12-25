@@ -53,11 +53,13 @@ public class Assets{
 	/**
 	 * find a min size asset for the requests size.
 	 * @param sizeOfAsset, size of asset by the amount of people 
+	 * @return assset , for rent if find
+	 * @return null , if not find
 	 */
 	public Asset FindFitRequest(int sizeOfAsset){
 		   int index;
 		for(index=0;
-			(AssetsCollection.get(index).assetSize()>= sizeOfAsset) || (index < AssetsCollection.size() ) ;
+			((index < AssetsCollection.size() || AssetsCollection.get(index).assetSize()>= sizeOfAsset) ) ;
 			index++){}
 			if (AssetsCollection.get(index).assetSize()>=sizeOfAsset)
 				return AssetsCollection.get(index);
