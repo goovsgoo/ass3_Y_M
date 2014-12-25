@@ -88,7 +88,7 @@ public class RepairMaterial {
 	protected synchronized void acquire(int i){
 		if (quantity >= i){
 			this.quantity = this.quantity -i;
-			Statistics.instance().consumeIngredient(this, i);				//lookHere need to change in Statisti'
+			Statistics.instance().consumeMaterial(this, i);		
 		} else {
 			throw new RuntimeException( "You can not get "+ i +" "+ this); 
 		}

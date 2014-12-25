@@ -89,7 +89,7 @@ public class Parser {
 	 				int quantity = Integer.parseInt(materialElement.getElementsByTagName("Quantity").item(0).getTextContent());
 	 				
 	 				repairMaterial = new RepairMaterial(MaterialName, quantity);
-	 				warehouse.addMaterial(repairMaterial);
+	 				warehouse.addMaterials(repairMaterial);
 			}
 		}
 		
@@ -217,7 +217,7 @@ public class Parser {
 		 		Element customerGroupElement = (Element) customerGroupNode;
 		 		String groupManagerName = customerGroupElement.getElementsByTagName("GroupManagerName").item(0).getTextContent();
 		 		
-		 		CustomerGroup newCustomerGroup = CustomerGroup(groupManagerName);
+		 		CustomerGroupDetails newCustomerGroup = new CustomerGroupDetails(groupManagerName);
 		 		
 		 		// parse CustomersList
 		 		Node customersListNode = customerGroupElement.getElementsByTagName("Customers").item(0);
@@ -232,8 +232,9 @@ public class Parser {
 				 		String Vandalism = customerElement.getElementsByTagName("Vandalism").item(0).getTextContent();
 		 				int MinimumDamage = Integer.parseInt(customerElement.getElementsByTagName("MinimumDamage").item(0).getTextContent());
 		 				int MaximumDamage = Integer.parseInt(customerElement.getElementsByTagName("MaximumDamage").item(0).getTextContent());
-		 				
-		 				newCustomerGroup.addCustomer(customerName,Vandalism,MinimumDamage,MaximumDamage);
+		 				Customer newCustomer = new Customer(customerName, Vandalism, MinimumDamage, MaximumDamage);
+		 				newCustomerGroup.addCustomer(newCustomer);
+
 				 	}
 				}
 		
@@ -250,8 +251,8 @@ public class Parser {
 				 		String Type = requestElement.getElementsByTagName("Type").item(0).getTextContent();
 		 				int Size = Integer.parseInt(requestElement.getElementsByTagName("Size").item(0).getTextContent());
 		 				int Duration = Integer.parseInt(requestElement.getElementsByTagName("Duration").item(0).getTextContent());
-
-		 				newCustomerGroup.addRequest(requestID,Type,Size,Duration);
+		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
+		 				newCustomerGroup.addRequest(newRequest);
 				 	}
 				}
 				

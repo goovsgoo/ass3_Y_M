@@ -53,10 +53,9 @@ public class RunnableClerk implements Runnable{
 
 	
 	/**
-	 * constructs a new RunnableDeliveryPerson object using a name, restaurantAddress, speed and ordersToDelive.
-	 * @param deliveryPersonName
-	 * @param speed
-	 * @param x,y - coordinates of the restaurantAddress
+	 * constructs a new clerk
+	 * @param clerkName
+	 * @param clerckLocation
 	 */
 	public RunnableClerk(String clerkName, Point2D.Double clerckLocation){
 		this.NAME = clerkName;

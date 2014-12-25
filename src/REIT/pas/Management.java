@@ -14,8 +14,6 @@ import java.util.concurrent.*;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
-import restaurant.actives.RunnableDeliveryPerson;
-import restaurant.passives.Order;
 import REIT.act.*;
 
 /*
@@ -205,6 +203,10 @@ public class Management {
 	public Vector<String> returnCopyMaterial() {
 		Vector<String> copyMaterialsNames = new Vector<String>(materialNames);
 		return copyMaterialsNames;
+	}
+
+	void addAsset(Asset newAsset) {
+		assets.addNewAsset(newAsset);
 	}
 	
 	

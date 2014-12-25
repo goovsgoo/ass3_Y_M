@@ -28,16 +28,16 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	private final long stay;
 	private Asset assetLinked;
 	private String status;
-	private String groupManager;
+	// private String groupManager;
 	
-	public RentalRequest(String id, String type, int size, long duration, String manager) {
+	public RentalRequest(String id, String type, int size, long duration) {
 		this.ID = id;
 		this.assetType = type;
 		this.assetSize = size;
 		this.stay = duration;
 		this.assetLinked = null;
 		this.status = "incomplete";
-		this.groupManager = manager;
+		// this.groupManager = manager;
 	}
 	
 	// TODO add comments
