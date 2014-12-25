@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import REIT.act.Dish;
-import REIT.act.RunnableCookOneDish;
 
 
 //import restaurant.passives.Order;
@@ -178,5 +176,34 @@ public class Asset implements Comparable<Asset>{
 		return null;
 	}
 	
+	/**
+	 * Calculate tools and materials names for camper
+	 */
+	private void calculateToolsMaterials() {
+		int i;
+		//from all the name in the project
+		Vector<String> copyMaterialsNames = management.returnCopyMaterial();
+		Vector<String> copyToolsNames = management.returnCopyTools();
+		
+		for(i = 0;i< assetContentCollection.size();i++){
+			
+			//from this Content
+			HashMap<String, Integer> copyTools = assetContentCollection.get(i).returnCopyTools();
+			HashMap<String, Integer> copyMaterials = assetContentCollection.get(i).returnCopyMaterials();
+			
+			
+			
+			/*
+			for (Entry<String, Integer> entry : copyTools.entrySet()) {
+				if( !copyToolsNames.contains(entry.getKey()) )
+					copyToolsNames.add(entry.getKey());
+			}
+			for (Entry<String, Integer> entry : copyMaterials.entrySet()) {
+				if( !copyMaterialsNames.contains(entry.getKey()) )
+					copyMaterialsNames.add(entry.getKey());
+			}
+			*/
+		}
+	}
 	
 }

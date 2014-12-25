@@ -72,7 +72,7 @@ public class Management {
 		MaintenanceSemaphore = new Semaphore(5, true);
 		toolNames=new Vector<>();
 		materialNames=new Vector<>();
-		calculateToolsMaterials();
+		//calculateToolsMaterials();
 		
 		try {
 			LOGGER = Logger.getLogger(Management.class.getName());
@@ -105,25 +105,9 @@ public class Management {
 	 * shut down when CountDownLatch = 0
 	 */
 	public void start(){
-		//Collections.sort(assets);
 		assets.sort();											
 		LOGGER.info("Simulation Session Started.");				
-		/*
-		for (RunnableMaintenanceRequest chef : chefs){
-			executor.execute(chef);
-		}
-		for (RunnableDeliveryPerson deliverer : deliveryPersons){
-			executor.execute(deliverer);
-		}
-		latch = new CountDownLatch(counter);
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		shutdown();
-		*/
+		///what next????
 	}
 	
 	/**
@@ -139,7 +123,7 @@ public class Management {
 	 * @param asset , to repair
 	 */
 	public synchronized void callMaintenanceMan(Asset asset){
-		MaintenanceSemaphore.acquire(1);
+		MaintenanceSemaphore.acquire();							//need to add relsh
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
 	
@@ -158,26 +142,6 @@ public class Management {
 	//	LOGGER.info(Statistics.instance().toString());
 	}
 
-	/**
-	 * Calculate tools and materials names for camper
-	 */
-	private void calculateToolsMaterials() {
-		int i;
-		for(i = 0;i< assetContentCollection.size();i++){
-			
-			HashMap<String, Integer> copyTools = assetContentCollection.get(i).returnCopyTools();
-			HashMap<String, Integer> copyMaterials = assetContentCollection.get(i).returnCopyMaterials();
-
-			for (Entry<String, Integer> entry : copyTools.entrySet()) {
-				if( !toolNames.contains(entry.getKey()) )
-						toolNames.add(entry.getKey());
-			}
-			for (Entry<String, Integer> entry : copyMaterials.entrySet()) {
-				if( !materialNames.contains(entry.getKey()) )
-					materialNames.add(entry.getKey());
-			}
-		}
-	}
 	
 	/**
 	 * Collects all existing material names in the project
@@ -194,6 +158,24 @@ public class Management {
 	public void addToolNameToColl(String toolName) {
 		if(!toolNames.contains(toolName))
 			toolNames.add(toolName);
+	}
+	
+	/**
+	 * get copy of list tools name
+	 * @return copyToolNames, copy of name of tools
+	 */
+	public Vector<String> returnCopyTools() {
+		Vector<String> copyToolsNames = new Vector<String>(toolNames);
+		return copyToolsNames;
+	}
+	
+	/**
+	 * get copy of list cMaterials name
+	 * @return copyMaterialsNames, copy of name of Materials
+	 */
+	public Vector<String> returnCopyMaterial() {
+		Vector<String> copyMaterialsNames = new Vector<String>(materialNames);
+		return copyMaterialsNames;
 	}
 	
 	
