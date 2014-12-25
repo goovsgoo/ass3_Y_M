@@ -58,6 +58,9 @@ public class CustomerGroupDetails {
        	CompletionService<Double> ecs = new ExecutorCompletionService<Double>(executor);
        	final int numerOfCustomers = customers.size();
        	double totalDamage = 0;
+       	// updates request and asset
+       	requests.firstElement().updateStatus();
+		requests.firstElement().linked().updateStatus();
        	
         for (int i = 0; i < numerOfCustomers; i++) {
         	Callable<Double> SingleStay = new CallableSimulateStayInAsset(customers.get(i),requests.firstElement().sendStayTime());
@@ -68,21 +71,22 @@ public class CustomerGroupDetails {
             totalDamage += (double) ecs.take().get();
         }        
         executor.shutdown();
-        // TODO remove request after we are done with it
-        
-        updateAsset(totalDamage);
+
+        updateAssetAndRequest(totalDamage);
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
         management.shouldRepair(sendRequest().linked());
+        // TODO remove request after we are done with it
 	}
 	
 	/**
 	 * updates the damage caused to the asset in the current request
 	 * @param damage caused while staying
 	 */
-	private void updateAsset(double damage) {
-		requests.firstElement().updateStatus("InProgress");
+	private void updateAssetAndRequest(double damage) {
+		requests.firstElement().updateStatus();
+		requests.firstElement().linked().updateStatus();
 		whereAreWe().breakThehouse(damage);
 	}
 	

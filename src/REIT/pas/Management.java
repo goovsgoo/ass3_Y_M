@@ -13,7 +13,7 @@ import java.util.concurrent.*;
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import restaurant.actives.RunnableDeliveryPerson;
-
+import restaurant.passives.Order;
 import REIT.act.*;
 
 /*
@@ -49,6 +49,7 @@ public class Management {
 	private ArrayList<CustomerGroupDetails> customerGroupDetails;
 	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
 	static public Logger LOGGER;
+	static public Asset DEADEND = new Asset(0, "end", 0, null, 0);
 	private static Management SAMPLE = null;
 	private ExecutorService executor;
 	private int counter;
@@ -90,7 +91,10 @@ public class Management {
 		return SAMPLE;
 	}
 	
-	
+	public void reportRequestDone(RentalRequest request) {
+		request.updateStatus();
+		request.linked().updateStatus();
+	}
 	
 	/**
 	 * start the REIT simulation
@@ -135,7 +139,32 @@ public class Management {
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
 	
-	
+	/**
+	 * find a matching asset and request
+	 * if found link them and update their status
+	 * @return the request whom we found a proper asset
+	 */
+	public synchronized RentalRequest findAssetRequestMatch() {
+		Assets assets = Assets.sample();
+		boolean found = false;
+		int i = 0;
+		Asset matchingAsset = null;
+		RentalRequest groupRequest = null;
+		while (!found && i < customerGroupDetails.size()) {
+			groupRequest = customerGroupDetails.get(i).sendRequest();
+			matchingAsset = assets.FindFitRequest(groupRequest.minSizeRequested());
+			if (matchingAsset != null) {found = true;}
+			++i;
+		}
+		if (found) {
+			groupRequest.LinkAsset(matchingAsset);
+			groupRequest.updateStatus();
+			matchingAsset.updateStatus();
+		}
+		else 
+			groupRequest = null;
+		return groupRequest;
+	}
 	
 	/**
 	 * shuts down the chefs and delivery persons when the simulation has finished.
