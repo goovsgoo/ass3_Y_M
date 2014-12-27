@@ -115,8 +115,9 @@ public class Management {
 	/**
 	 * Checks whether this house needed repair
 	 * @param asset , to repair
+	 * @throws InterruptedException 
 	 */
-	public synchronized void shouldRepair(Asset asset){
+	public synchronized void shouldRepair(Asset asset) throws InterruptedException{
 			if (asset.assetHealth()<=65)
 				callMaintenanceMan(asset);	
 	}
