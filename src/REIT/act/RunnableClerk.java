@@ -70,38 +70,31 @@ public class RunnableClerk implements Runnable{
 	 */	
 	public void run() {
 		while (this.active){
-			try {
-				RentalRequest requestMatching = null;
-				while (requestMatching == null) {
-					requestMatching = management.findAssetRequestMatch();
-				}
-				Asset asset = requestMatching.linked();					
-				if (asset == Management.DEADEND){
-					this.shutdown();
-					management.passToAvailableAssets(asset);
-				} else {
-					// Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
-					this.goConfirmAsset(asset);
-				}
+			RentalRequest requestMatching = null;
+			while (requestMatching == null) {
+				requestMatching = management.findAssetRequestMatch();
 			}
-			catch (InterruptedException e) {
-				//TODO
+			Asset asset = requestMatching.linked();					
+			if (asset == Management.DEADEND){
+				this.shutdown();
+				// management.passToAvailableAssets(asset);
+			} else {
+				// Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
+				this.goConfirmAsset(asset);
 			}
 		}
 		// Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
-	
-	 
+
 	/**
-	 * commits delivery of one order.
-	 * calculates the final reward of this order (by comparing the actual and expected cook time and delivery time).
-	 * @param order
+	 * simulate the time that passes as the clerk go to "verify" the asset to rent
+	 * @param asset
 	 */
 	private void goConfirmAsset(Asset asset){
-		// order.deliver();
 		// calculate distance from REIT to asset
 		int distance = calculateDistance(asset);
 		long timeToFullFulfil = checking(distance);
+		asset.updateStatus();
 		// Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	

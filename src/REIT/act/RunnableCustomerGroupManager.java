@@ -6,12 +6,13 @@ import REIT.pas.CustomerGroupDetails;
 
 public class RunnableCustomerGroupManager implements Runnable {
 
+	private CustomerGroupDetails group;
+	private String name;
+	
 	public RunnableCustomerGroupManager(CustomerGroupDetails myGroup) {
 		group = myGroup;
 	}
-	
-	private CustomerGroupDetails group;
-	
+		
 	/**
 	 * @Override run method.
 	 * simulates a group manager - the staying in the asset and the updates that comes afterwards
@@ -37,6 +38,15 @@ public class RunnableCustomerGroupManager implements Runnable {
 				e.printStackTrace();
 			}
 		}	
+	}
+	
+	/**
+	 * checks if the manager fits to a given name
+	 * @param name
+	 * @return true if this is the manager name
+	 */
+	public boolean equals(String name) {
+		return (this.name == name);
 	}
 }
 

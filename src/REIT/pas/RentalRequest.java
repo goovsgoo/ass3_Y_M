@@ -1,5 +1,7 @@
 package REIT.pas;
 
+import REIT.act.RunnableCustomerGroupManager;
+
 
 /*2.13 RentalRequest
 Found in: Management
@@ -28,7 +30,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	private final long stay;
 	private Asset assetLinked;
 	private String status;
-	// private String groupManager;
+	private String groupManager;
 	
 	public RentalRequest(String id, String type, int size, long duration) {
 		this.ID = id;
@@ -37,10 +39,11 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		this.stay = duration;
 		this.assetLinked = null;
 		this.status = "incomplete";
-		// this.groupManager = manager;
 	}
 	
-	// TODO add comments
+	/**
+	 * updated the request status to the next status in order
+	 */
 	protected void updateStatus() {
 		if(status=="Incomplete")
 			status="Fulfilled";
@@ -52,6 +55,17 @@ public class RentalRequest implements Comparable<RentalRequest>{
 			status="Incomplete";
 	}
 
+	/**
+	 * adds group manager name (from the group that is asking the request
+	 * @param group
+	 */
+	public void assignGroupManager(CustomerGroupDetails group) {
+		groupManager = group.managerName();
+	}
+	
+	/**
+	 * @return the time the group wish to stay
+	 */
 	public long sendStayTime(){
 		return stay;
 	}
@@ -72,18 +86,32 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		return assetSize;
 	}
 	
+	/**
+	 * @return the request handling status
+	 */
 	public String statusReport(){
 		return status;
 	}
 	
+	/**
+	 * @return the asset that the system found fitting to the request
+	 */
 	public Asset linked() {
 		return assetLinked;
 	}
+	
 	// Overriding the compareTo method
 	public int compareTo(RentalRequest other){
 		return this.assetSize - other.assetSize;
 	}
-	   	   
+	 
+	/**
+	 * @return the name of the group manager requesting
+	 */
+	public String owner() {
+		return groupManager;
+	}
+	
 	/**
 	 * for overrides toString method  
 	 */

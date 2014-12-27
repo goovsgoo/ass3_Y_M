@@ -40,6 +40,13 @@ public class CustomerGroupDetails {
 	}
 
 	/**
+	 * @return the manager name
+	 */
+	protected String managerName() {
+		return groupManager;
+	}
+	
+	/**
 	 * @param newGuy - customer to be added
 	 * @return true if could add, false otherwise
 	 */
