@@ -256,6 +256,7 @@ public class Parser {
 		 				int Size = Integer.parseInt(requestElement.getElementsByTagName("Size").item(0).getTextContent());
 		 				int Duration = Integer.parseInt(requestElement.getElementsByTagName("Duration").item(0).getTextContent());
 		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
+		 				newRequest.assignGroupManager(newCustomerGroup);
 		 				newCustomerGroup.addRequest(newRequest);
 				 	}
 				}

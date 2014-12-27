@@ -65,21 +65,11 @@ public class RunnableMaintenanceRequest implements Runnable {
 	
 		finish();
 				
+
 		//kill avi
 		executor.shutdown();
 		Management.LOGGER.fine(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 	}
-		
-	/**
-	 * updates the system that we are done
-	 */
-	protected synchronized void finish(){
-		// this.pressure = order.releasePressure(pressure);
-		// Management.LOGGER.info(new StringBuilder(NAME).append(" FINISHED COOKING ").append(order).toString());
-		// management.passToDelivery(order);
-		// this.notifyAll();
-	}
-	
 	
 	/**
 	 * when all orders were cooked - shuts down the chefs (update the active field to false).

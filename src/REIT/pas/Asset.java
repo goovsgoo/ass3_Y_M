@@ -102,7 +102,7 @@ public class Asset implements Comparable<Asset>{
 	/**
 	 * Updates the state of the house, according to the order
 	 */
-	protected void updateStatus() {
+	public  void updateStatus() {
 		if(status=="AVAILABLE")
 			status="BOOKED";
 		else if(status=="BOOKED")
@@ -127,6 +127,7 @@ public class Asset implements Comparable<Asset>{
 		warehouse.release(this);
 		health = 100;
 		updateStatus();
+		management.endOfFixing();
 	}
 	
 	/**

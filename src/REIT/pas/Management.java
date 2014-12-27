@@ -115,18 +115,28 @@ public class Management {
 	/**
 	 * Checks whether this house needed repair
 	 * @param asset , to repair
+	 * @throws InterruptedException 
 	 */
-	public synchronized void shouldRepair(Asset asset){
+	public synchronized void shouldRepair(Asset asset) throws InterruptedException{
 			if (asset.assetHealth()<=65)
 				callMaintenanceMan(asset);	
 	}
 	/**
 	 * fix the asset , execute new Maintenance personnel ,A limited number of maintenance personnel
 	 * @param asset , to repair
+	 * @throws InterruptedException 
 	 */
-	public synchronized void callMaintenanceMan(Asset asset){
+
+public synchronized void callMaintenanceMan(Asset asset) throws InterruptedException{
 		///MaintenanceSemaphore.acquire();							//need to change to latch!
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
+	}
+	
+	/**
+	 * realse Maintenance personnel 
+	 */
+	public synchronized void endOfFixing() {
+		MaintenanceSemaphore.release();
 	}
 	
 	/**
@@ -205,9 +215,24 @@ public class Management {
 		return copyMaterialsNames;
 	}
 
-	void addAsset(Asset newAsset) {
+	/**
+	 * add a new asset to the asset collection
+	 * @param newAsset
+	 */
+	public void addAsset(Asset newAsset) {
 		assets.addNewAsset(newAsset);
 	}
-	
-	
+
+	/**
+	 * find a manger in ther manger list based on his name
+	 * @param name - the manager name
+	 * @return the manager itself
+	 */
+	public RunnableCustomerGroupManager findManager(String name) {
+		for (RunnableCustomerGroupManager manager : customerGroupManager){
+			if (manager.equals(name))
+				return manager;
+		}
+		return null;
+	}
 }
