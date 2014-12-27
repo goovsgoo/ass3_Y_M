@@ -205,7 +205,7 @@ public class Asset implements Comparable<Asset>{
 		StringBuilder printOut = new StringBuilder();
 		printOut.append(ID).append(":/tType: ").append(TYPE).append(",\tStatus: ").append(status).append(",\tcost: ").append(COST).append(",\tsize: ").append(SIZE).append(",\tlocation: [").append(LOCATION.getX()).append(", ").append(LOCATION.getY()).append("],\t Content in Order: ");
 		for (AssetContent assetContent : assetContentCollection){
-			printOut.append(assetContent.toString()).append("(").append(assetContentCollection.get(assetContent)).append(") ");
+			//printOut.append(assetContent.toString()).append("(").append(assetContentCollection.get(assetContent)).append(") ");
 		}
 		return printOut.toString();
 	}

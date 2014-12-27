@@ -62,7 +62,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 		}
 		
 		// update the management that you finish (when all fixes finished we can start new day
-		// TODO - איך עושים את זה?????????????
+	
 		finish();
 				
 		//kill avi

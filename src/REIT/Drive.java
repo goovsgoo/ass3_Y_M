@@ -14,10 +14,10 @@ import REIT.pas.Parser;
 public class Drive {
 
 	/**
-	 * @param args- InitialData.xml, Menu.xml, OrdersList.xml 
+	 * @param args- InitialData.xml,AssetContentsRepairDetails.xml, Assets.xml, CustomersGroups.xml 
 	 */
 	public static void main(String[] args) {
-		if (args.length != 3)
+		if (args.length != 4)
 			throw new RuntimeException("command must include exactly three file pathes.");
 		
 		for (String arg : args){

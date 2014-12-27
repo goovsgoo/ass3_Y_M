@@ -107,7 +107,32 @@ public class Warehouse implements WarehouseInterface {
 		}
 		RepairMaterials.add(newMaterials);
 	}
-
+	
+	/**
+	 * this method return the tool by name,  for Parser use.
+	 * @return RepairTool 
+	 */
+	//protected RepairTool findToolByName(String name){
+	//	for (int i = 0 ; i < tools.size(); i++){
+	///		RepairTool toolForComper = tools.get(i);
+	//		if (toolForComper.toString() == name)
+	//			return toolForComper;
+	//	}
+	//	return null;
+	//}
+	
+	/**
+	 * this method return the tool by name,  for Parser use.
+	 * @return RepairMaterial 
+	 */
+	//protected RepairMaterial findMaterialByName(String name){
+	//	for (int i = 0 ; i < tools.size(); i++){
+	//		RepairMaterial materialForComp = RepairMaterials.get(i);
+	//		if (materialForComp.toString() == name)
+	//			return materialForComp;
+	//	}
+	//	return null;
+	//}
 
 }
 

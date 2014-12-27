@@ -8,6 +8,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -108,14 +110,14 @@ public class Parser {
 		 		String location = clerkElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
 	 			//String location = new StringBuilder("Location #").append(i).toString();						
 	 			
-	 			runnableClerk = new RunnableClerk(clerkName, location);
- 				management.addClerk(runnableClerk);
+	 			//runnableClerk = new RunnableClerk(clerkName, location);
+ 				//management.addClerk(runnableClerk);
 			 }
 		 }
 		
 		//parse MaintenancePersons
-	 	int numberOfMaintenancePersons = Integer.parseInt(clerksListElement.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());
-	 	int totalNumberOfRentalRequests = Integer.parseInt(clerksListElement.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
+	 	int numberOfMaintenancePersons = Integer.parseInt(staffElement.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());
+	 	int totalNumberOfRentalRequests = Integer.parseInt(staffElement.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
 			 	
 		//Maybe start here - RunnableMaintaineceRequest? ~ Yoed
 	}
@@ -160,7 +162,7 @@ public class Parser {
 		 		}
 		 		
 				// add AssetContent to asset in management???????? ~ Yoed
-			 	management.addAssetContent(newAssetContent);
+			 	//management.addAssetContent(newAssetContent);
 			}
 		}
 	}
@@ -174,8 +176,9 @@ public class Parser {
 		 		Element assetElement = (Element) assetNode;
 		 		String assetType = assetElement.getElementsByTagName("Type").item(0).getTextContent();
  				int assetSize = Integer.parseInt(assetElement.getElementsByTagName("Size").item(0).getTextContent());
- 				String location = assetElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
+ 				//String location = assetElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
 	 			//need to be Point2D//String location = new StringBuilder("Location #").append(i).toString();	
+ 				Point2D.Double location = new Point2D.Double();
  				int assetCostPerNight = Integer.parseInt(assetElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
 
 		 		Asset newAsset = new Asset(i,assetType,assetSize,location,assetCostPerNight);
@@ -192,7 +195,8 @@ public class Parser {
 				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				int repairMultiplier = Integer.parseInt(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				AssetContent tmp = newAsset.getContentByName(assetContentName);
+		 				//AssetContent tmp = new AssetContent();
+		 				AssetContent tmp = management.getContentByName(assetContentName);
 		 				tmp.updateMultiplier(repairMultiplier);
 		 				newAsset.addNewContent(tmp);
 				 	}

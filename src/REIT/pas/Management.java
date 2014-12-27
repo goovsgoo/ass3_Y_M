@@ -125,7 +125,7 @@ public class Management {
 	 * @param asset , to repair
 	 */
 	public synchronized void callMaintenanceMan(Asset asset){
-		MaintenanceSemaphore.acquire();							//need to add relsh
+		///MaintenanceSemaphore.acquire();							//need to change to latch!
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
 	
