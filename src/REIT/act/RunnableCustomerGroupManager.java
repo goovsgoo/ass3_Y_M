@@ -18,7 +18,7 @@ public class RunnableCustomerGroupManager implements Runnable {
 	 * simulates a group manager - the staying in the asset and the updates that comes afterwards
 	 */
 	public void run() {
-		// keep running until all requests are fullfilled
+		// keep running until all requests are fulfilled
 		while(group.anyMoreRequests()) { 
 
 			// wait for a request to get handled by a clerk

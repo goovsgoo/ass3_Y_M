@@ -118,7 +118,7 @@ public class CustomerGroupDetails {
 	 * @return true if the group has any requests left
 	 */
 	public boolean anyMoreRequests(){
-		return requests.isEmpty();
+		return !requests.isEmpty();
 	}
 
 	/**
