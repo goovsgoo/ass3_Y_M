@@ -51,7 +51,8 @@ public class Asset implements Comparable<Asset>{
 	final private int SIZE;
 	private double health;
 	private Management management = Management.sample();
-
+	boolean fixing;
+	
 	private static Warehouse warehouse = Warehouse.sample();
 	
 	
@@ -72,8 +73,7 @@ public class Asset implements Comparable<Asset>{
 		assetContentCollection = new Vector<AssetContent>();
 		status="AVAILABLE";
 		health=100;
-
-
+		fixing = false;
 	}
 	
 		
@@ -114,7 +114,7 @@ public class Asset implements Comparable<Asset>{
 	}
 	
 	/**
-	 * for maintence man use - take from warehouse all the stuff you need to repair the asset's contents
+	 * for maintains man use - take from warehouse all the stuff you need to repair the asset's contents
 	 * calculate the time of the repair
 	 * sleep that time
 	 * release all the tools used back to the warehouse
@@ -127,6 +127,7 @@ public class Asset implements Comparable<Asset>{
 		warehouse.release(this);
 		health = 100;
 		updateStatus();
+		changeFixingStatus();
 		management.endOfFixing();
 	}
 	
@@ -189,6 +190,22 @@ public class Asset implements Comparable<Asset>{
 	}
 	
 	/**
+	 * switch the fixing status (is this asset being fixed)
+	 */
+	protected void changeFixingStatus() {
+		fixing = !fixing;
+	}
+	
+	/**
+	 * checks if the asset is empty and waiting for further handling before 
+	 * getting back to the market
+	 * @return asset where a group just ended staying and no maintains man attached
+	 */
+	protected boolean canTheMaintenceManCome() {
+		return (!fixing && status == "UNAVAILABLE");
+	}
+	
+	/**
 	 * Compare this.name and String.
 	 * @param id, name of Content to compare.
 	 * @return true, The same name.
@@ -232,6 +249,10 @@ public class Asset implements Comparable<Asset>{
 		if(assetContentCollection.get(i).equals(assetContentName))
 			return assetContentCollection.get(i);
 		return null;
+	}
+	
+	public Point2D.Double adress() {
+		return LOCATION;
 	}
 	
 	/**

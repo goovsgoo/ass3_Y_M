@@ -66,9 +66,32 @@ public class Assets{
 			return null;
 		
 	}
-		
+	
+	protected int size(){
+		return this.AssetsCollection.size();
+	}
+	
 	/**
-	 * sort the assat by size
+	 * finds an asset that we need to fix
+	 * @return
+	 */
+	public synchronized Asset findAssetToFix() {
+		// Assets assets = Assets.sample();
+		boolean found = false;
+		int i = 0;
+		Asset matchingAsset = null;
+		while (!found && i < size()) {
+			if (AssetsCollection.get(i).assetHealth() <= 65 && AssetsCollection.get(i).canTheMaintenceManCome()) {
+				matchingAsset = AssetsCollection.get(i);
+				found = true;
+				matchingAsset.changeFixingStatus();
+			}
+		}
+		return matchingAsset;
+	}
+	
+	/**
+	 * sort the asset by size
 	 * @param sizeOfAsset, size of asset by the amount of people 
 	 */
 	public void sort(){

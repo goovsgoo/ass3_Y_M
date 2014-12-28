@@ -106,6 +106,10 @@ public class RunnableClerk implements Runnable{
 		// Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	
+	private int calculateDistance(Asset asset) {
+		return (int)(Math.sqrt((this.location.getY()-asset.adress().getY())*(this.location.getY()-asset.adress().getY())) + ((this.location.getX()-asset.adress().getX())*(this.location.getX()-asset.adress().getX())));
+	}
+
 	/**	
 	 * calculates the ACTUAL time to deliver an order from to the restaurant to the customer.
 	 * @return actualDeliveryTime in milliseconds.
@@ -134,16 +138,6 @@ public class RunnableClerk implements Runnable{
 	}
 	
 
-	/**??????????????????????????????????????????????????????????????
-	 * calculates the distance between the restaurant to the customer.
-	 * @return distance
-	 *//*
-	public int calculateDistance(Asset asset){
-		// management.sendAddress(this);
-		int dist = (int)(Math.sqrt((this.location.getY()-asset.location.getY())*(this.location.getY()-asset.location.getY())) + ((this.location.getX()-asset.location.getX())*(this.location.getX()-asset.location.getX())));
-		return dist;
-	}
-	*/
 	/**
 	 * overrides toString method.
 	 */

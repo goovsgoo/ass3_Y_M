@@ -193,10 +193,10 @@ public class Parser {
 				 	if (assetContentNode.getNodeType() == Node.ELEMENT_NODE) {
 				 		Element assetContentElement = (Element) assetContentNode;
 				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
-		 				int repairMultiplier = Integer.parseInt(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
+		 				float repairMultiplier = Float.parseFloat(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				//AssetContent tmp = new AssetContent();
-		 				AssetContent tmp = management.getContentByName(assetContentName);
+		 				AssetContent tmp = new AssetContent(assetContentName);
+		 				// AssetContent tmp = management.getContentByName(assetContentName);
 		 				tmp.updateMultiplier(repairMultiplier);
 		 				newAsset.addNewContent(tmp);
 				 	}
@@ -258,10 +258,10 @@ public class Parser {
 		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
 		 				newRequest.assignGroupManager(newCustomerGroup);
 		 				newCustomerGroup.addRequest(newRequest);
+		 				management.incrementCounter();
 				 	}
 				}
-				
-				
+			management.addGroup(newCustomerGroup);	
 		 	}
 		}
 	}

@@ -109,7 +109,22 @@ public class Management {
 	public void start(){
 		assets.sort();											
 		LOGGER.info("Simulation Session Started.");				
-		///what next????
+		for (RunnableCustomerGroupManager groupManager : customerGroupManager){
+			executor.execute(groupManager);
+		}
+		for (RunnableClerk clerk : clerks){
+			executor.execute(clerk);
+		}
+		
+		latch = new CountDownLatch(counter);
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		shutdown();
+		
 	}
 	
 	/**
@@ -127,7 +142,7 @@ public class Management {
 	 * @throws InterruptedException 
 	 */
 
-public synchronized void callMaintenanceMan(Asset asset) throws InterruptedException{
+	public synchronized void callMaintenanceMan(Asset asset) throws InterruptedException{
 		///MaintenanceSemaphore.acquire();							//need to change to latch!
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
@@ -165,6 +180,7 @@ public synchronized void callMaintenanceMan(Asset asset) throws InterruptedExcep
 			groupRequest = null;
 		return groupRequest;
 	}
+	
 	
 	/**
 	 * shuts down the chefs and delivery persons when the simulation has finished.
@@ -234,5 +250,19 @@ public synchronized void callMaintenanceMan(Asset asset) throws InterruptedExcep
 				return manager;
 		}
 		return null;
+	}
+	
+	private void linkGroupsToCountDown() {
+		for (CustomerGroupDetails group : customerGroupDetails)
+			group.linkLatch(latch);
+	}
+
+	public void incrementCounter() {
+		counter++;
+	}
+
+	public void addGroup(CustomerGroupDetails newCustomerGroup) {
+		customerGroupDetails.add(newCustomerGroup);
+		customerGroupManager.add(new RunnableCustomerGroupManager(newCustomerGroup));
 	}
 }

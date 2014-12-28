@@ -32,13 +32,14 @@ public class RunnableMaintenanceRequest implements Runnable {
 	private Management management ;
 	private Warehouse warehouse ;
 	final private String NAME;
-
+	private Assets assets = Assets.sample();
+	
 	/**
 	 * constructs new RunnableMaintenanceRequest object
 	 * @param name
 	 */
 	public RunnableMaintenanceRequest(String name, Asset assetToFix){
-		asset = assetToFix;
+		// asset = assetToFix;
 		management = Management.sample();
 		warehouse = Warehouse.sample();
 		this.active = true;
@@ -51,7 +52,11 @@ public class RunnableMaintenanceRequest implements Runnable {
 	 * simulates the order's distribution between the chefs.
 	 */
 	public void run()  {	
-
+		Asset assetToFix = null;
+		while (assetToFix == null) {
+			assetToFix = assets.findAssetToFix();
+		}
+		
 		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
 		// fix the asset
 		try {
@@ -61,11 +66,8 @@ public class RunnableMaintenanceRequest implements Runnable {
 			e.printStackTrace();
 		}
 		
-		// update the management that you finish (when all fixes finished we can start new day
-	
-		finish();
-				
-
+		// some sort of countdown
+		
 		//kill avi
 		executor.shutdown();
 		Management.LOGGER.fine(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());

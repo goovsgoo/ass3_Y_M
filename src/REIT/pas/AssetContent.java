@@ -25,7 +25,7 @@ the higher the time it takes to repair. Health begins at 100, can be fractions, 
 
 public class AssetContent {
 	final private String NAME;
-	private int repairMultiplier;
+	private float repairMultiplier;
 	//private int health;
 	private HashMap<String, Integer> materials;
 	private HashMap<String, Integer> tools;
@@ -131,8 +131,8 @@ public class AssetContent {
 	 * update repairMultiplier of content
 	 * @param repairMultiplier2
 	 */
-	public void updateMultiplier(int repairMultiplier2) {
-		repairMultiplier=repairMultiplier2;
+	public void updateMultiplier(float repairMultiplier2) {
+		repairMultiplier = repairMultiplier2;
 	}
 	
 	/**

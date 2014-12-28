@@ -3,6 +3,7 @@ package REIT.pas;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -23,12 +24,17 @@ public class CustomerGroupDetails {
 	private final String groupManager;
 	private Vector<RentalRequest> requests;
 	private ArrayList<Customer> customers;
+	private CountDownLatch mainLatch;
 	private Management management = Management.sample();	
 	
 	public CustomerGroupDetails(String manager) {
 		groupManager = manager;
 		requests = new Vector<RentalRequest>();
 		customers = new ArrayList<Customer>();
+	}
+	
+	protected void linkLatch(CountDownLatch latch) {
+		mainLatch = latch;
 	}
 	
 	/**
@@ -89,11 +95,15 @@ public class CustomerGroupDetails {
 	
 	/**
 	 * updates the damage caused to the asset in the current request
+	 * and removes the request from the requests list
 	 * @param damage caused while staying
 	 */
 	private void updateAssetAndRequest(double damage) {
 		requests.firstElement().updateStatus();
 		requests.firstElement().linked().updateStatus();
+		requests.removeElementAt(0);
+		mainLatch.countDown();
+		System.out.println("yay, we handled a request");
 		whereAreWe().breakThehouse(damage);
 	}
 	
