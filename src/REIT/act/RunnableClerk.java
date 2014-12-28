@@ -45,8 +45,7 @@ It will simulate retrieving a new order to deliver as follows:
 
 public class RunnableClerk implements Runnable{
 	final private String NAME; 
-	private Point2D.Double location;
-	// final private double SPEED; 
+	private Point2D.Double location; 
 	// private Statistics rewardStatistics = Statistics.instance();
 	private boolean active;
 	private Management management = Management.sample();
@@ -60,17 +59,15 @@ public class RunnableClerk implements Runnable{
 	public RunnableClerk(String clerkName, Point2D.Double clerckLocation){
 		this.NAME = clerkName;
 		this.location = clerckLocation;
-		// this.SPEED = speed;
 		this.active = true;
 	}
 	
 	/**
 	 * @Override run method.
-	 * simulates a clerk recieving asset and matching request and handling them
+	 * simulates a clerk receiving asset and matching request and handling them
 	 */	
 	public void run() {
 		while (this.active){
-			//try {
 				RentalRequest requestMatching = null;
 				while (requestMatching == null) {
 					requestMatching = management.findAssetRequestMatch();
@@ -84,11 +81,7 @@ public class RunnableClerk implements Runnable{
 					// Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
 					this.goConfirmAsset(asset);
 				}
-		//	}
-			//catch (InterruptedException e) {??????????????????????????????????????????????????????????
-				//TODO
-			//}
-		//}
+				active = false;
 		// Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
 		}
 	}

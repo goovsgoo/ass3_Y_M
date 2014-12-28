@@ -31,20 +31,20 @@ public class RunnableMaintenanceRequest implements Runnable {
 	private Asset asset ;
 	private Management management ;
 	private Warehouse warehouse ;
-	final private String NAME;
+	private int ID;
 	private Assets assets = Assets.sample();
 	
 	/**
 	 * constructs new RunnableMaintenanceRequest object
 	 * @param name
 	 */
-	public RunnableMaintenanceRequest(String name, Asset assetToFix){
+	public RunnableMaintenanceRequest(int id){
 		// asset = assetToFix;
 		management = Management.sample();
 		warehouse = Warehouse.sample();
 		this.active = true;
 		executor = Executors.newCachedThreadPool();
-		this.NAME = name;
+		this.ID = id;
 	}
 	
 	/**
@@ -66,11 +66,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 			e.printStackTrace();
 		}
 		
-		// some sort of countdown
-		
-		//kill avi
-		executor.shutdown();
-		Management.LOGGER.fine(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
+		Management.LOGGER.fine(new StringBuilder(ID).append(" is SHUTTING DOWN...").toString());
 	}
 	
 	/**
@@ -88,7 +84,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 	 * overrides toString method.
 	 */
 	public String toString(){
-		return this.NAME+" "+active;
+		return this.ID+" "+active;
 	}
 	
 }

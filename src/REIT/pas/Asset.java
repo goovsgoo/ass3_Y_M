@@ -128,7 +128,7 @@ public class Asset implements Comparable<Asset>{
 		health = 100;
 		updateStatus();
 		changeFixingStatus();
-		management.endOfFixing();
+		// management.endOfFixing();
 	}
 	
 	/**

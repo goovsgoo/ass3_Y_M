@@ -89,7 +89,7 @@ public class CustomerGroupDetails {
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
-        management.shouldRepair(sendRequest().linked());
+        // management.shouldRepair(sendRequest().linked());
         // TODO remove request after we are done with it
 	}
 	

@@ -115,6 +115,9 @@ public class Management {
 		for (RunnableClerk clerk : clerks){
 			executor.execute(clerk);
 		}
+		for (RunnableMaintenanceRequest maintenance : MaintenanceMen){
+			executor.execute(maintenance);
+		}
 		
 		latch = new CountDownLatch(counter);
 		try {
@@ -127,27 +130,14 @@ public class Management {
 		
 	}
 	
-	/**
-	 * Checks whether this house needed repair
-	 * @param asset , to repair
-	 * @throws InterruptedException 
-	 */
+	/*
 	public synchronized void shouldRepair(Asset asset) throws InterruptedException{
 			if (asset.assetHealth()<=65)
 				callMaintenanceMan(asset);	
 	}
-	/**
-	 * fix the asset , execute new Maintenance personnel ,A limited number of maintenance personnel
-	 * @param asset , to repair
-	 * @throws InterruptedException 
-	 */
-
 	public synchronized void callMaintenanceMan(Asset asset) throws InterruptedException{
-		///MaintenanceSemaphore.acquire();							//need to change to latch!
-		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
+		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));	
 	}
-	
-	/*
 	public synchronized void endOfFixing() {
 		MaintenanceMen.release();
 	}
@@ -274,6 +264,9 @@ public class Management {
 	}
 
 	public void setNumberOfMaintenanceMen(int numberOfMaintenancePersons) {
-		MaintenanceMen.setSize(numberOfMaintenancePersons);
+		for (int i = 0; i < numberOfMaintenancePersons; i++) {
+			RunnableMaintenanceRequest newMan = new RunnableMaintenanceRequest(i);
+			MaintenanceMen.add(newMan);
+		}
 	}
 }
