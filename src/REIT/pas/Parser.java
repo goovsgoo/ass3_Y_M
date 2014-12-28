@@ -2,9 +2,11 @@ package REIT.pas;
 import REIT.act.*;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,6 +64,7 @@ public class Parser {
 	private static void parseInitialData(Document initialDataDoc){
 
 		//parse warehouse
+
 		Node warehouseListNode = initialDataDoc.getElementsByTagName("Warehouse").item(0);
 		Element warehouseElement = (Element) warehouseListNode;
 		
@@ -106,19 +109,21 @@ public class Parser {
 			Node clerkNode = clerksListElement.getElementsByTagName("Clerk").item(i);
 			if (clerkNode.getNodeType() == Node.ELEMENT_NODE) {
 		 		Element clerkElement = (Element) clerkNode;
-		 		String clerkName = clerkElement.getElementsByTagName("Name").item(0).getTextContent();
-		 		String location = clerkElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
-	 			//String location = new StringBuilder("Location #").append(i).toString();						
-	 			
-	 			//runnableClerk = new RunnableClerk(clerkName, location);
- 				//management.addClerk(runnableClerk);
+		 		String clerkName = clerkElement.getElementsByTagName("Name").item(0).getTextContent();		 		
+		 		NamedNodeMap location = clerkElement.getElementsByTagName("Location").item(0).getAttributes();
+		 		String x = location.getNamedItem("x").getNodeValue();
+		 		String y = location.getNamedItem("y").getNodeValue();		
+	 			Point2D.Double clerkLocation = new Point2D.Double(Double.parseDouble(x), Double.parseDouble(y));
+	 			runnableClerk = new RunnableClerk(clerkName, clerkLocation);
+ 				management.addClerk(runnableClerk);
 			 }
 		 }
 		
 		//parse MaintenancePersons
 	 	int numberOfMaintenancePersons = Integer.parseInt(staffElement.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());
 	 	int totalNumberOfRentalRequests = Integer.parseInt(staffElement.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
-			 	
+		management.setNumberOfMaintenanceMen(numberOfMaintenancePersons);
+	 	management.setCount(totalNumberOfRentalRequests);
 		//Maybe start here - RunnableMaintaineceRequest? ~ Yoed
 	}
 			
@@ -258,7 +263,7 @@ public class Parser {
 		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
 		 				newRequest.assignGroupManager(newCustomerGroup);
 		 				newCustomerGroup.addRequest(newRequest);
-		 				management.incrementCounter();
+		 				// management.incrementCounter();
 				 	}
 				}
 			management.addGroup(newCustomerGroup);	

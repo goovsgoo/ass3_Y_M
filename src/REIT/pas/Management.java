@@ -45,7 +45,7 @@ public class Management {
 	private Assets assets;
 	private Warehouse warehouse;
 	private ArrayList<RunnableClerk> clerks;
-	private Semaphore MaintenanceSemaphore;
+	private Vector<RunnableMaintenanceRequest> MaintenanceMen;
 	private ArrayList<CustomerGroupDetails> customerGroupDetails;
 	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
 	static public Logger LOGGER;
@@ -68,7 +68,7 @@ public class Management {
 		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
 		executor = Executors.newCachedThreadPool();
 		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
-		MaintenanceSemaphore = new Semaphore(5, true);
+		MaintenanceMen = new Vector<RunnableMaintenanceRequest>();
 		toolNames=new Vector<>();
 		materialNames=new Vector<>();
 		//calculateToolsMaterials();
@@ -147,12 +147,11 @@ public class Management {
 		executor.execute(new RunnableMaintenanceRequest("avi" + latch,asset));
 	}
 	
-	/**
-	 * realse Maintenance personnel 
-	 */
+	/*
 	public synchronized void endOfFixing() {
-		MaintenanceSemaphore.release();
+		MaintenanceMen.release();
 	}
+	*/
 	
 	/**
 	 * find a matching asset and request
@@ -264,5 +263,17 @@ public class Management {
 	public void addGroup(CustomerGroupDetails newCustomerGroup) {
 		customerGroupDetails.add(newCustomerGroup);
 		customerGroupManager.add(new RunnableCustomerGroupManager(newCustomerGroup));
+	}
+
+	public void addClerk(RunnableClerk runnableClerk) {
+		clerks.add(runnableClerk);
+	}
+
+	public void setCount(int totalNumberOfRentalRequests) {
+		counter = totalNumberOfRentalRequests;
+	}
+
+	public void setNumberOfMaintenanceMen(int numberOfMaintenancePersons) {
+		MaintenanceMen.setSize(numberOfMaintenancePersons);
 	}
 }
