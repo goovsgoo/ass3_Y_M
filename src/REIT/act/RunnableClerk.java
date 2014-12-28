@@ -99,6 +99,11 @@ public class RunnableClerk implements Runnable{
 		// Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	
+	/**
+	 * calculate the distance between the clerk and the asset 
+	 * @param asset - that the clerck will go to 
+	 * @return the distance between them
+	 */
 	private int calculateDistance(Asset asset) {
 		return (int)(Math.sqrt((this.location.getY()-asset.adress().getY())*(this.location.getY()-asset.adress().getY())) + ((this.location.getX()-asset.adress().getX())*(this.location.getX()-asset.adress().getX())));
 	}

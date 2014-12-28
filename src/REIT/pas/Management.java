@@ -120,6 +120,8 @@ public class Management {
 		}
 		
 		latch = new CountDownLatch(counter);
+		linkGroupsToCountDown();
+		
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
@@ -241,28 +243,51 @@ public class Management {
 		return null;
 	}
 	
+	/**
+	 * adds for all the groups the latch object
+	 * so they can countdown when a request is fulfilled
+	 */
 	private void linkGroupsToCountDown() {
 		for (CustomerGroupDetails group : customerGroupDetails)
 			group.linkLatch(latch);
 	}
 
+	/**
+	 * increase the request counter by one (for testing, not realy necessary) 
+	 */
 	public void incrementCounter() {
 		counter++;
 	}
 
+	/**
+	 * adds group to the group collection
+	 * @param newCustomerGroup
+	 */
 	public void addGroup(CustomerGroupDetails newCustomerGroup) {
 		customerGroupDetails.add(newCustomerGroup);
 		customerGroupManager.add(new RunnableCustomerGroupManager(newCustomerGroup));
 	}
 
+	/**
+	 * adds a new clerk to the array
+	 * @param runnableClerk
+	 */
 	public void addClerk(RunnableClerk runnableClerk) {
 		clerks.add(runnableClerk);
 	}
 
+	/**
+	 * initialize the number of requests in the system (after we anwer the we can shutdown all) 
+	 * @param totalNumberOfRentalRequests
+	 */
 	public void setCount(int totalNumberOfRentalRequests) {
 		counter = totalNumberOfRentalRequests;
 	}
 
+	/**
+	 * initialize the Maintenance Men (with ids 0,1,2...)
+	 * @param numberOfMaintenancePersons - amount of Maintenance Men
+	 */
 	public void setNumberOfMaintenanceMen(int numberOfMaintenancePersons) {
 		for (int i = 0; i < numberOfMaintenancePersons; i++) {
 			RunnableMaintenanceRequest newMan = new RunnableMaintenanceRequest(i);

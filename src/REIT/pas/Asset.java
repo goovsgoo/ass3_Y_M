@@ -245,12 +245,16 @@ public class Asset implements Comparable<Asset>{
 	public AssetContent getContentByName(String assetContentName) {
 		int i;
 		for(i = 0;i< assetContentCollection.size() || assetContentCollection.get(i).equals(assetContentName);i++)
-		{}
+		{
 		if(assetContentCollection.get(i).equals(assetContentName))
 			return assetContentCollection.get(i);
+		}
 		return null;
 	}
 	
+	/**
+	 * @return the asset address
+	 */
 	public Point2D.Double adress() {
 		return LOCATION;
 	}
@@ -269,8 +273,6 @@ public class Asset implements Comparable<Asset>{
 			//from this Content
 			HashMap<String, Integer> copyTools = assetContentCollection.get(i).returnCopyTools();
 			HashMap<String, Integer> copyMaterials = assetContentCollection.get(i).returnCopyMaterials();
-			
-			
 			
 			/*
 			for (Entry<String, Integer> entry : copyTools.entrySet()) {
