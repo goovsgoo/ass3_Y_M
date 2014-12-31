@@ -14,6 +14,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 
 /**  @author Meni & Yoed
  * this class Parse the XML files.
@@ -25,6 +28,7 @@ public class Parser {
 	private static RepairTool repairTool;
 	private static RepairMaterial repairMaterial;
 	private static RunnableClerk runnableClerk;
+	static public Logger PRELOGGER;
 
 
 	/**
@@ -35,7 +39,19 @@ public class Parser {
 	 * @throws IOException
 	 */
 	public static void parseFile(String fileName) throws ParserConfigurationException, SAXException, IOException{
-
+		
+		try {
+			PRELOGGER = Logger.getLogger(Management.class.getName());
+			FileHandler handler = new FileHandler("PRE_REIT.log");
+			handler.setFormatter(new SimpleFormatter());
+			PRELOGGER.addHandler(handler);
+			} 
+		catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
 		File xmlFile = new File(fileName);
 		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -116,6 +132,8 @@ public class Parser {
 	 			Point2D.Double clerkLocation = new Point2D.Double(Double.parseDouble(x), Double.parseDouble(y));
 	 			runnableClerk = new RunnableClerk(clerkName, clerkLocation);
  				management.addClerk(runnableClerk);
+		 		PRELOGGER.info(runnableClerk.toString());	
+ 
 			 }
 		 }
 		
@@ -124,6 +142,8 @@ public class Parser {
 	 	int totalNumberOfRentalRequests = Integer.parseInt(staffElement.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
 		management.setNumberOfMaintenanceMen(numberOfMaintenancePersons);
 	 	management.setCount(totalNumberOfRentalRequests);
+	 	PRELOGGER.info(new StringBuilder("The total Number Of RentalRequests is : ").append(totalNumberOfRentalRequests).toString());
+	 	PRELOGGER.info(new StringBuilder("The number Of maintenance Persons is : ").append(numberOfMaintenancePersons).toString());
 		//Maybe start here - RunnableMaintaineceRequest? ~ Yoed
 	}
 			
@@ -165,9 +185,8 @@ public class Parser {
 		 				newAssetContent.addMaterial(materialName, quantity);
 		 			}
 		 		}
-		 		
-				// add AssetContent to asset in management???????? ~ Yoed
-			 	//management.addAssetContent(newAssetContent);
+		 		management.addAssetContent(newAssetContent);
+		 		PRELOGGER.info(newAssetContent.toString());	
 			}
 		}
 	}
@@ -181,9 +200,11 @@ public class Parser {
 		 		Element assetElement = (Element) assetNode;
 		 		String assetType = assetElement.getElementsByTagName("Type").item(0).getTextContent();
  				int assetSize = Integer.parseInt(assetElement.getElementsByTagName("Size").item(0).getTextContent());
- 				//String location = assetElement.getElementsByTagName("Location").item(0).getNodeValue();					//I dont know how to take the Location ~ Yoed 
-	 			//need to be Point2D//String location = new StringBuilder("Location #").append(i).toString();	
- 				Point2D.Double location = new Point2D.Double();
+ 				NamedNodeMap NodeLocation = assetElement.getElementsByTagName("Location").item(0).getAttributes();
+		 		String x = NodeLocation.getNamedItem("x").getNodeValue();
+		 		String y = NodeLocation.getNamedItem("y").getNodeValue();		
+	 			Point2D.Double location = new Point2D.Double(Double.parseDouble(x), Double.parseDouble(y));
+ 				
  				int assetCostPerNight = Integer.parseInt(assetElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
 
 		 		Asset newAsset = new Asset(i,assetType,assetSize,location,assetCostPerNight);
@@ -200,19 +221,19 @@ public class Parser {
 				 		String assetContentName = assetContentElement.getElementsByTagName("Name").item(0).getTextContent();
 		 				float repairMultiplier = Float.parseFloat(assetContentElement.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
 		 				
-		 				AssetContent tmp = new AssetContent(assetContentName);
-		 				// AssetContent tmp = management.getContentByName(assetContentName);
+		 				AssetContent tmp = management.findAssetContentByName(assetContentName);
 		 				tmp.updateMultiplier(repairMultiplier);
 		 				newAsset.addNewContent(tmp);
 				 	}
 				 }
-				// add asset to assets in management???????? ~ Yoed
 			 	management.addAsset(newAsset);
+		 		PRELOGGER.info(newAsset.toString());	
 			}
 		}
 	}
 	
-	
+
+
 	private static void parseCustomersGroups(Document customersGroupsDoc){
 		
 		// parse CustomerGroupDetailsList
@@ -256,17 +277,18 @@ public class Parser {
 					Node requestNode = rentalRequestsElement.getElementsByTagName("Request").item(n);
 				 	if (requestNode.getNodeType() == Node.ELEMENT_NODE) {
 				 		Element requestElement = (Element) requestNode;
-				 		String requestID = new StringBuilder("Request #").append(n).toString();
+				 		String requestID = new StringBuilder("Request ").append(n).toString();
 				 		String Type = requestElement.getElementsByTagName("Type").item(0).getTextContent();
 		 				int Size = Integer.parseInt(requestElement.getElementsByTagName("Size").item(0).getTextContent());
 		 				int Duration = Integer.parseInt(requestElement.getElementsByTagName("Duration").item(0).getTextContent());
 		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
 		 				newRequest.assignGroupManager(newCustomerGroup);
 		 				newCustomerGroup.addRequest(newRequest);
-		 				// management.incrementCounter();
+		 				management.incrementCounter();
 				 	}
 				}
 			management.addGroup(newCustomerGroup);	
+			PRELOGGER.info(newCustomerGroup.toString());	
 		 	}
 		}
 	}

@@ -9,14 +9,6 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
-
-
-//import restaurant.passives.Order;
-//import restaurant.passives.Dish;
-//import restaurant.actives.RunnableCookOneDish;
-
-
 /*
  * 2.1 Asset
 Found in: Management
@@ -218,13 +210,18 @@ public class Asset implements Comparable<Asset>{
 	/**
 	 * @Override
 	 */
-	@Override												//////need to write again!!!!!!!1
+	@Override											
 	public String toString(){
 		StringBuilder printOut = new StringBuilder();
-		printOut.append(ID).append(":/tType: ").append(TYPE).append(",\tStatus: ").append(status).append(",\tcost: ").append(COST).append(",\tsize: ").append(SIZE).append(",\tlocation: [").append(LOCATION.getX()).append(", ").append(LOCATION.getY()).append("],\t Content in Order: ");
-		for (AssetContent assetContent : assetContentCollection){
-			//printOut.append(assetContent.toString()).append("(").append(assetContentCollection.get(assetContent)).append(") ");
+		printOut.append("Asset: ");
+		printOut.append("[ID: ").append(ID).append("][location: ").append(LOCATION.getX()).append(",").append(LOCATION.getX());
+		printOut.append("][Status: ").append(status).append("][Cost: ").append(COST).append("][Size: ").append(SIZE);
+		printOut.append("][Health: ").append(health).append("][Fixing: ").append(fixing);
+		printOut.append("] Contents : { ");
+		for(int i = 0;i< assetContentCollection.size();i++){
+			printOut.append("[").append(assetContentCollection.get(i).toString()).append("]");
 		}
+		printOut.append("} ");
 		return printOut.toString();
 	}
 	
@@ -262,6 +259,7 @@ public class Asset implements Comparable<Asset>{
 	/**
 	 * Calculate tools and materials names for camper
 	 */
+	/*
 	private void calculateToolsMaterials() {
 		int i;
 		//from all the name in the project
@@ -283,8 +281,9 @@ public class Asset implements Comparable<Asset>{
 				if( !copyMaterialsNames.contains(entry.getKey()) )
 					copyMaterialsNames.add(entry.getKey());
 			}
-			*/
+			*//*
 		}
-	}
+	} 
+	*/
 	
 }

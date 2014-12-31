@@ -97,7 +97,18 @@ public class AssetContent {
 	 */
 	@Override
 	public String toString(){
-		return this.NAME;
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("Asset Content: ");
+		printOut.append("[Name: ").append(NAME).append("][Repair Multiplier: ").append(repairMultiplier);
+		for(Object objname:tools.keySet()) {
+			printOut.append("][Tool: ").append(objname);
+			printOut.append("][Tool quantity: ").append(tools.get(objname));
+		}
+		for(Object objname:materials.keySet()) {
+			printOut.append("][Material: ").append(objname);
+			printOut.append("][Material quantity: ").append(materials.get(objname)).append("]");
+		}
+		return printOut.toString();
 	}
 	
 	/**

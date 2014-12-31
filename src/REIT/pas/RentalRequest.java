@@ -116,6 +116,11 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	 * for overrides toString method  
 	 */
 	public String toString(){
-		return this.ID;
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("Rental Request: ");
+		printOut.append("[ID: ").append(ID).append("][Asset type: ").append(assetType).append("][assetSize: ").append(assetSize);
+		printOut.append("][Stay: ").append(stay).append("][Asset linked: ").append(assetLinked).append("][Status: ").append(status);
+		printOut.append("][Group manager: ").append(groupManager);
+		return printOut.toString();
 	}
 }

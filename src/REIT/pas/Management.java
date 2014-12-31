@@ -48,6 +48,7 @@ public class Management {
 	private Vector<RunnableMaintenanceRequest> MaintenanceMen;
 	private ArrayList<CustomerGroupDetails> customerGroupDetails;
 	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
+	private ArrayList<AssetContent> assetContent;
 	static public Logger LOGGER;
 	static public Asset DEADEND = new Asset(0, "end", 0, null, 0);
 	private static Management SAMPLE = null;
@@ -69,6 +70,7 @@ public class Management {
 		executor = Executors.newCachedThreadPool();
 		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
 		MaintenanceMen = new Vector<RunnableMaintenanceRequest>();
+		assetContent = new ArrayList<AssetContent>();
 		toolNames=new Vector<>();
 		materialNames=new Vector<>();
 		//calculateToolsMaterials();
@@ -78,16 +80,15 @@ public class Management {
 			FileHandler handler = new FileHandler("REIT.log");
 			handler.setFormatter(new SimpleFormatter());
 			LOGGER.addHandler(handler);
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			} 
+		catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	/** this method is a factury method.
+	/** this method is a factory method.
 	 *  cares that only once will be initialized an object
 	 * @return sample of Management
 	 */
@@ -207,20 +208,20 @@ public class Management {
 	/**
 	 * get copy of list tools name
 	 * @return copyToolNames, copy of name of tools
-	 */
+	 *//*
 	public Vector<String> returnCopyTools() {
 		Vector<String> copyToolsNames = new Vector<String>(toolNames);
 		return copyToolsNames;
-	}
+	}*/
 	
 	/**
 	 * get copy of list cMaterials name
 	 * @return copyMaterialsNames, copy of name of Materials
-	 */
+	 *//*
 	public Vector<String> returnCopyMaterial() {
 		Vector<String> copyMaterialsNames = new Vector<String>(materialNames);
 		return copyMaterialsNames;
-	}
+	}*/
 
 	/**
 	 * add a new asset to the asset collection
@@ -275,6 +276,14 @@ public class Management {
 	public void addClerk(RunnableClerk runnableClerk) {
 		clerks.add(runnableClerk);
 	}
+	
+	/**
+	 * adds a new AssetContent to the array
+	 * @param newAssetContent
+	 */
+	public void addAssetContent(AssetContent newAssetContent) {
+		assetContent.add(newAssetContent);
+	}
 
 	/**
 	 * initialize the number of requests in the system (after we anwer the we can shutdown all) 
@@ -294,4 +303,15 @@ public class Management {
 			MaintenanceMen.add(newMan);
 		}
 	}
+
+	
+	public AssetContent findAssetContentByName(String assetContentName) {
+			int i;
+			for(i = 0;i< assetContent.size() || assetContent.get(i).equals(assetContentName);i++)
+			{
+			if(assetContent.get(i).equals(assetContentName))
+				return assetContent.get(i);
+			}
+			return null;
+		}
 }

@@ -140,7 +140,9 @@ public class RunnableClerk implements Runnable{
 	 * overrides toString method.
 	 */
 	public String toString(){
-		return this.NAME;
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("New Clerk : ").append(NAME).append(" [location: ").append(location.getX()).append(",").append(location.getX()).append("]");
+		return printOut.toString();
 	}
 	
 	/**

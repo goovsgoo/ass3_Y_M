@@ -149,7 +149,22 @@ public class CustomerGroupDetails {
 	 * for overrides toString method  
 	 */
 	public String toString(){
-		return this.groupManager;
+		//return this.groupManager;
+		/*private final String groupManager;
+		private Vector<RentalRequest> requests;
+		private ArrayList<Customer> customers;
+	*/
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("New customers gruop : ").append(groupManager).append(" ,Requests :");
+		for(int i = 0;i< requests.size();i++){
+			printOut.append("[").append(requests.get(i).toString()).append("]");
+		}
+		printOut.append(" ,customers: ");
+		for(int i = 0;i< customers.size();i++){
+			printOut.append("[").append(customers.get(i).toString()).append("]");
+		}
+		return printOut.toString();
+		
 	}
 
 }
