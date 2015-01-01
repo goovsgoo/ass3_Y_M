@@ -57,10 +57,12 @@ public class Assets{
 	 * @return null , if not find
 	 */
 	public Asset FindFitRequest(int sizeOfAsset){
-		   int index;
+		int index;
 		for(index=0;index < AssetsCollection.size();index++){
-			if (AssetsCollection.get(index).assetSize()>=sizeOfAsset)
+			if ( (AssetsCollection.get(index).assetSize()>=sizeOfAsset )
+					&& ( AssetsCollection.get(index).statusAssest() == "AVAILABLE" ) ){
 				return AssetsCollection.get(index);
+			}	
 		}
 			return null;
 	}

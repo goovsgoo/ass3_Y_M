@@ -1,7 +1,6 @@
 package REIT.act;
 
-import java.util.concurrent.ExecutionException;
-
+import java.util.concurrent.*;
 import REIT.pas.CustomerGroupDetails;
 import REIT.pas.Management;
 
@@ -12,6 +11,7 @@ public class RunnableCustomerGroupManager implements Runnable {
 	
 	public RunnableCustomerGroupManager(CustomerGroupDetails myGroup) {
 		group = myGroup;
+		name = myGroup.managerName();
 	}
 		
 	/**
@@ -23,13 +23,13 @@ public class RunnableCustomerGroupManager implements Runnable {
 		while(group.anyMoreRequests()) { 
 
 			// wait for a request to get handled by a clerk
-			while (group.statOfCurrentRequest() != "InProgress");
-		 	Management.LOGGER.info(new StringBuilder(group.managerName()).append(" is now get into asset ").toString());	
-				 //try {
-			     //       wait();
-			      //  }
-			//catch (InterruptedException e) {}
-			
+			//while (group.statOfCurrentRequest() != "InProgress");
+			try {
+				group.getAsset();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			Management.LOGGER.info(new StringBuilder(group.managerName()).append(" is now get into asset ").toString());	
 			// wait for stay in asset to end and update asset's total damage and status
 			try {
 				group.sleepInAsset();
@@ -40,6 +40,7 @@ public class RunnableCustomerGroupManager implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//we need to pop the request
 		}	
 	}
 	

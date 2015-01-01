@@ -95,7 +95,7 @@ public class Asset implements Comparable<Asset>{
 	 * 
 	 * @return ID
 	 */
-	protected int assetID() {
+	public int assetID() {
 		return ID;
 	}
 	
@@ -111,6 +111,7 @@ public class Asset implements Comparable<Asset>{
 			status="UNAVAILABLE";
 		else if(status=="UNAVAILABLE")
 			status="AVAILABLE";
+		Management.LOGGER.info(new StringBuilder("asset - ").append(ID).append(" is now ").append(status).toString());
 	}
 	
 	/**
@@ -294,4 +295,10 @@ public class Asset implements Comparable<Asset>{
 	} 
 	*/
 	
+	/**
+	 * @return the status handling 
+	 */
+	public String statusAssest(){
+		return status;
+	}
 }

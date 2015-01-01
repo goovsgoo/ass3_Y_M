@@ -38,7 +38,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		this.assetSize = size;
 		this.stay = duration;
 		this.assetLinked = null;
-		this.status = "incomplete";
+		this.status = "Incomplete";
 	}
 	
 	/**
@@ -100,7 +100,10 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		return assetLinked;
 	}
 	
-	// Overriding the compareTo method
+	/**
+	 * Overriding the compareTo method
+	 * @return Difference of sizes
+	 */
 	public int compareTo(RentalRequest other){
 		return this.assetSize - other.assetSize;
 	}
@@ -122,5 +125,14 @@ public class RentalRequest implements Comparable<RentalRequest>{
 		printOut.append("][Stay: ").append(stay).append("][Asset linked: ").append(assetLinked).append("][Status: ").append(status);
 		printOut.append("][Group manager: ").append(groupManager);
 		return printOut.toString();
+	}
+
+	
+	synchronized public void waitForBooking() throws InterruptedException {
+		wait();
+	}
+	
+	synchronized public void notifyBooking() throws InterruptedException {
+		notify();
 	}
 }

@@ -150,8 +150,9 @@ public class Management {
 	 * find a matching asset and request
 	 * if found link them and update their status
 	 * @return the request whom we found a proper asset
+	 * @throws Exception 
 	 */
-	public synchronized RentalRequest findAssetRequestMatch() {
+	public synchronized RentalRequest findAssetRequestMatch() throws Exception {
 		Assets assets = Assets.sample();
 		boolean found = false;
 		int i = 0;
@@ -159,15 +160,17 @@ public class Management {
 		RentalRequest groupRequest = null;
 		while (!found && i < customerGroupDetails.size()) {
 			groupRequest = customerGroupDetails.get(i).sendRequest();
-			matchingAsset = assets.FindFitRequest(groupRequest.minSizeRequested());
-			if (matchingAsset != null) {found = true;}
+			if(groupRequest.statusReport() == "Incomplete"){
+				matchingAsset = assets.FindFitRequest(groupRequest.minSizeRequested());
+				if (matchingAsset != null) {found = true;}
+			}
 			++i;
 		}
 		if (found) {
+		 	LOGGER.info(new StringBuilder("we find [group:asset] [").append(groupRequest.owner()).append(":").append(matchingAsset.assetID()).append("]").toString());	
 			groupRequest.LinkAsset(matchingAsset);
 			groupRequest.updateStatus();
 			matchingAsset.updateStatus();
-		 	LOGGER.info(new StringBuilder("we find [group:asset] [").append(groupRequest.owner()).append(":").append(matchingAsset.assetID()).append("]").toString());	
 		}
 		else 
 			groupRequest = null;
@@ -315,4 +318,5 @@ public class Management {
 			}
 			return null;
 		}
+
 }

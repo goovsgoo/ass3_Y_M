@@ -1,6 +1,7 @@
 package REIT.act;
 
 import java.awt.geom.Point2D;
+import java.util.concurrent.Exchanger;
 
 import REIT.pas.*;
 
@@ -49,6 +50,7 @@ public class RunnableClerk implements Runnable{
 	// private Statistics rewardStatistics = Statistics.instance();
 	private boolean active;
 	private Management management = Management.sample();
+	//private Exchanger<String> exchangePipe;
 
 	
 	/**
@@ -70,19 +72,26 @@ public class RunnableClerk implements Runnable{
 		while (this.active){
 				RentalRequest requestMatching = null;
 				while (requestMatching == null) {
-					requestMatching = management.findAssetRequestMatch();
+					try {
+						requestMatching = management.findAssetRequestMatch();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				Asset asset = requestMatching.linked();					
 				if (asset == Management.DEADEND){
 					this.shutdown();
-				//	management.passToAvailableAssets(asset); ?????????????????????????????????????????????????
 				} 
 				else {
-					// Management.LOGGER.info(new StringBuilder(NAME).append(" RECEIVED ").append(order).toString());
 					this.goConfirmAsset(asset);
+					try {
+						requestMatching.notifyBooking();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 				active = false;
-		// Management.LOGGER.info(new StringBuilder(NAME).append(" is SHUTTING DOWN...").toString());
+			 	Management.LOGGER.info(new StringBuilder("the clerk: ").append(NAME).append(" back to base").toString());	
 		}
 	}
 	
@@ -92,32 +101,34 @@ public class RunnableClerk implements Runnable{
 	 * @param asset
 	 */
 	private void goConfirmAsset(Asset asset){
-		// calculate distance from REIT to asset
 		int distance = calculateDistance(asset);
-		long timeToFullFulfil = checking(distance);
+		Management.LOGGER.info(new StringBuilder(NAME).append(NAME).append(" going to asset number - ").append(asset.assetID()).toString());
+		long timeToFullFulfil = walkTo(distance);
 		asset.updateStatus();
-		// Management.LOGGER.info(new StringBuilder(NAME).append(" COLLECTED REWARD: ").append(finalReward).append(" out of ").append(order.calcTotalReward()).toString());
 	}
 	
 	/**
 	 * calculate the distance between the clerk and the asset 
-	 * @param asset - that the clerck will go to 
+	 * @param asset - that the clerk will go to 
 	 * @return the distance between them
 	 */
 	private int calculateDistance(Asset asset) {
-		return (int)(Math.sqrt((this.location.getY()-asset.adress().getY())*(this.location.getY()-asset.adress().getY())) + ((this.location.getX()-asset.adress().getX())*(this.location.getX()-asset.adress().getX())));
+		double y = Math.pow(this.location.getY()-asset.adress().getY(),2);
+		double x = Math.pow(this.location.getX()-asset.adress().getX(),2);
+		return (int)(Math.sqrt(y+x));
+		//return (int)(Math.sqrt((this.location.getY()-asset.adress().getY())*(this.location.getY()-asset.adress().getY())) + ((this.location.getX()-asset.adress().getX())*(this.location.getX()-asset.adress().getX())));
 	}
 
 	/**	
-	 * calculates the ACTUAL time to deliver an order from to the restaurant to the customer.
-	 * @return actualDeliveryTime in milliseconds.
+	 * 
+	 * @return 
 	 */
-	public long checking(int distance){
+	public long walkTo(int distance){
 		// TODO do we calculate the time like that????????????
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Thread.sleep(distance);
+			Thread.sleep(distance*1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,7 +137,7 @@ public class RunnableClerk implements Runnable{
 		long finishTime = System.currentTimeMillis();
 			
 		try {
-			Thread.sleep(distance);
+			Thread.sleep(distance*1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

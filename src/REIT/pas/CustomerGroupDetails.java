@@ -167,5 +167,13 @@ public class CustomerGroupDetails {
 		return printOut.toString();
 		
 	}
+	
+	/**
+	 * Take the first request and wait for booking 
+	 * @throws Exception 
+	 */
+	public void getAsset() throws Exception {
+		requests.firstElement().waitForBooking();
+	}
 
 }
