@@ -48,7 +48,7 @@ public class CustomerGroupDetails {
 	/**
 	 * @return the manager name
 	 */
-	protected String managerName() {
+	public String managerName() {
 		return groupManager;
 	}
 	
@@ -71,9 +71,6 @@ public class CustomerGroupDetails {
        	CompletionService<Double> ecs = new ExecutorCompletionService<Double>(executor);
        	final int numerOfCustomers = customers.size();
        	double totalDamage = 0;
-       	// updates request and asset
-       	requests.firstElement().updateStatus();
-		requests.firstElement().linked().updateStatus();
        	
         for (int i = 0; i < numerOfCustomers; i++) {
         	Callable<Double> SingleStay = new CallableSimulateStayInAsset(customers.get(i),requests.firstElement().sendStayTime());
@@ -91,6 +88,10 @@ public class CustomerGroupDetails {
         report.updateDamage(totalDamage);
         // management.shouldRepair(sendRequest().linked());
         // TODO remove request after we are done with it
+        
+     // updates request and asset to "Complete"
+       	requests.firstElement().updateStatus();
+		requests.firstElement().linked().updateStatus();
 	}
 	
 	/**

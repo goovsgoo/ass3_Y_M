@@ -3,6 +3,7 @@ package REIT.act;
 import java.util.concurrent.ExecutionException;
 
 import REIT.pas.CustomerGroupDetails;
+import REIT.pas.Management;
 
 public class RunnableCustomerGroupManager implements Runnable {
 
@@ -22,10 +23,12 @@ public class RunnableCustomerGroupManager implements Runnable {
 		while(group.anyMoreRequests()) { 
 
 			// wait for a request to get handled by a clerk
-			while (group.statOfCurrentRequest() == "INCOMPLETE")
-				 try {
-			            wait();
-			        } catch (InterruptedException e) {}
+			while (group.statOfCurrentRequest() != "InProgress");
+		 	Management.LOGGER.info(new StringBuilder(group.managerName()).append(" is now get into asset ").toString());	
+				 //try {
+			     //       wait();
+			      //  }
+			//catch (InterruptedException e) {}
 			
 			// wait for stay in asset to end and update asset's total damage and status
 			try {

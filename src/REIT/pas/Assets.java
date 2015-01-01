@@ -58,13 +58,11 @@ public class Assets{
 	 */
 	public Asset FindFitRequest(int sizeOfAsset){
 		   int index;
-		for(index=0;
-			((index < AssetsCollection.size() || AssetsCollection.get(index).assetSize()>= sizeOfAsset) ) ;
-			index++){}
+		for(index=0;index < AssetsCollection.size();index++){
 			if (AssetsCollection.get(index).assetSize()>=sizeOfAsset)
 				return AssetsCollection.get(index);
+		}
 			return null;
-		
 	}
 	
 	protected int size(){

@@ -167,6 +167,7 @@ public class Management {
 			groupRequest.LinkAsset(matchingAsset);
 			groupRequest.updateStatus();
 			matchingAsset.updateStatus();
+		 	LOGGER.info(new StringBuilder("we find [group:asset] [").append(groupRequest.owner()).append(":").append(matchingAsset.assetID()).append("]").toString());	
 		}
 		else 
 			groupRequest = null;

@@ -92,6 +92,14 @@ public class Asset implements Comparable<Asset>{
 	}
 	
 	/**
+	 * 
+	 * @return ID
+	 */
+	protected int assetID() {
+		return ID;
+	}
+	
+	/**
 	 * Updates the state of the house, according to the order
 	 */
 	public  void updateStatus() {
