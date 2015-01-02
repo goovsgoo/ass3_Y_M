@@ -128,7 +128,7 @@ public class RunnableClerk implements Runnable{
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Thread.sleep(distance*1000);
+			Thread.sleep(distance*100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,7 +137,7 @@ public class RunnableClerk implements Runnable{
 		long finishTime = System.currentTimeMillis();
 			
 		try {
-			Thread.sleep(distance*1000);
+			Thread.sleep(distance*100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

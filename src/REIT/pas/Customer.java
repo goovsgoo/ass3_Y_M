@@ -32,11 +32,11 @@ health of the asset, only the RunnableCustomerGroupManager.
 	 * @return the damage caused by customer
 	 */
 	public double calculateDemage() {
-		if (vandalismType.equals("ARBITRARY")) {
+		if (vandalismType.equals("Arbitrary")) {
 			Random rand = new Random();
 			return (minDemage + (maxDemage - minDemage) * rand.nextDouble());
 		}
-		else if (vandalismType.equals("FIXED")) {
+		else if (vandalismType.equals("Fixed")) {
 			return ((maxDemage - minDemage)) / 2;
 		}
 		else {

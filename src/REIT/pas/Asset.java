@@ -89,6 +89,7 @@ public class Asset implements Comparable<Asset>{
 	 */
 	protected void breakThehouse(double demage) {
 		health = health - demage;
+		Management.LOGGER.info(new StringBuilder("asset-").append(ID).append(" health is ").append(health).toString());	
 	}
 	
 	/**

@@ -71,27 +71,35 @@ public class CustomerGroupDetails {
        	CompletionService<Double> ecs = new ExecutorCompletionService<Double>(executor);
        	final int numerOfCustomers = customers.size();
        	double totalDamage = 0;
+        
+       	requests.firstElement().updateStatus();
+       	whereAreWe().updateStatus();
        	
         for (int i = 0; i < numerOfCustomers; i++) {
         	Callable<Double> SingleStay = new CallableSimulateStayInAsset(customers.get(i),requests.firstElement().sendStayTime());
         	ecs.submit(SingleStay);
         }
+		Management.LOGGER.info(new StringBuilder(groupManager).append(" was sleep in asset - ")
+				.append(requests.firstElement().linked().assetID()).append(" for ")
+				.append(requests.firstElement().sendStayTime()).append(" days ").toString());	
         for (int i=0; i < numerOfCustomers ; ++i)
         {
             totalDamage += (double) ecs.take().get();
         }        
+        if (totalDamage>100)
+        	totalDamage=100;
         executor.shutdown();
 
         updateAssetAndRequest(totalDamage);
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
-        // management.shouldRepair(sendRequest().linked());
+         //management.shouldRepair(sendRequest().linked());
         // TODO remove request after we are done with it
         
      // updates request and asset to "Complete"
-       	requests.firstElement().updateStatus();
-		requests.firstElement().linked().updateStatus();
+       	//requests.firstElement().updateStatus();
+		//requests.firstElement().linked().updateStatus();
 	}
 	
 	/**
@@ -100,12 +108,12 @@ public class CustomerGroupDetails {
 	 * @param damage caused while staying
 	 */
 	private void updateAssetAndRequest(double damage) {
+		whereAreWe().breakThehouse(damage);
 		requests.firstElement().updateStatus();
-		requests.firstElement().linked().updateStatus();
+		//whereAreWe().updateStatus();
 		requests.removeElementAt(0);
 		mainLatch.countDown();
-		System.out.println("yay, we handled a request");
-		whereAreWe().breakThehouse(damage);
+		//System.out.println("yay, we handled a request");
 	}
 	
 	/**

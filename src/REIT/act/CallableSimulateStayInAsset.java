@@ -19,8 +19,8 @@ public class CallableSimulateStayInAsset implements Callable<Double>{
 	 * calculate the damage the customer did while staying
 	 */
 	public Double call() throws Exception {
-		Thread.sleep(timeInAsset);
-		return oneCustomer.calculateDemage();
+		Thread.sleep(timeInAsset*100*24);
+		return oneCustomer.calculateDemage()*(timeInAsset);
 	}
 	
 }

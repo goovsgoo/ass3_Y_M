@@ -34,13 +34,10 @@ public class RunnableCustomerGroupManager implements Runnable {
 			try {
 				group.sleepInAsset();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//we need to pop the request
 		}	
 	}
 	
