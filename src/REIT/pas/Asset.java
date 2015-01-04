@@ -308,7 +308,9 @@ public class Asset implements Comparable<Asset>{
 		return status;
 	}
 
-
+	/**
+	 * @return the cost per night
+	 */
 	public int cost() {
 		return COST;
 	}

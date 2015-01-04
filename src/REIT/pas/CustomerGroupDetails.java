@@ -104,6 +104,9 @@ public class CustomerGroupDetails {
 		//requests.firstElement().linked().updateStatus();
 	}
 	
+	/**
+	 * @return the reward that REIT will gain from the staying of the group
+	 */
 	private int calculateReward() {
 		return whereAreWe().cost() * requests.firstElement().period();
 	}
