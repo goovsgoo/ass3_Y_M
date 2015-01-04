@@ -27,7 +27,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	private final String ID;
 	private final String assetType;
 	private final int assetSize;
-	private final long stay;
+	private final long stay;		//why this is "long" type???
 	private Asset assetLinked;
 	private String status;
 	private String groupManager;
@@ -134,5 +134,12 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	
 	synchronized public void notifyBooking() throws InterruptedException {
 		notify();
+	}
+
+	/**
+	 * @return the time wich they wish to stay
+	 */
+	public int period() {
+		return (int) stay;
 	}
 }

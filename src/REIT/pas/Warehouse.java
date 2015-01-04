@@ -23,6 +23,7 @@ public class Warehouse implements WarehouseInterface {
 	private ArrayList<RepairTool> tools;
 	private ArrayList<RepairMaterial> RepairMaterials;
 	private static Warehouse SAMPLE = null;
+	private Statistics statistics = Statistics.instance();
 	
 	private Warehouse(){
 		tools = new ArrayList<RepairTool>();
@@ -51,8 +52,10 @@ public class Warehouse implements WarehouseInterface {
 		for (int i = 0 ; i < tools.size() ; i++){
 			RepairTool tool = tools.get(i);
 			int quantity = asset.isNeeded(tool);
-			if (quantity > 0)
+			if (quantity > 0) {
 				tool.acquire(quantity);
+				statistics.addUsedTool(tool);
+			}
 		}																
 		// acquire materials
 		for (int i = 0 ; i < RepairMaterials.size() ; i++){
@@ -60,6 +63,7 @@ public class Warehouse implements WarehouseInterface {
 			int quantity = asset.isNeeded(material);
 			if (quantity > 0){
 				material.acquire(quantity);
+				statistics.consumeMaterial(material, quantity);
 			}
 		}
 	}													

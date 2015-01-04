@@ -33,6 +33,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 	private Warehouse warehouse ;
 	private int ID;
 	private Assets assets = Assets.sample();
+	// private CyclicBarrier endOfDay;
 	
 	/**
 	 * constructs new RunnableMaintenanceRequest object
@@ -51,21 +52,22 @@ public class RunnableMaintenanceRequest implements Runnable {
 	 * @Override run method.
 	 * simulates the order's distribution between the chefs.
 	 */
-	public void run()  {	
-		Asset assetToFix = null;
-		while (assetToFix == null) {
-			assetToFix = assets.findAssetToFix();
+	public void run()  {
+		while(active) {
+			Asset assetToFix = null;
+			while (assetToFix == null) {
+				assetToFix = assets.findAssetToFix();
+			}
+			asset = assetToFix;
+			Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
+			// fix the asset
+			try {
+				asset.fixAsset();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		asset = assetToFix;
-		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
-		// fix the asset
-		try {
-			asset.fixAsset();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		Management.LOGGER.fine(new StringBuilder(ID).append(" is SHUTTING DOWN...").toString());
 	}
 	

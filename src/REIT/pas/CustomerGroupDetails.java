@@ -26,7 +26,7 @@ public class CustomerGroupDetails {
 	private ArrayList<Customer> customers;
 	private CountDownLatch mainLatch;
 	private Management management = Management.sample();	
-	
+	private Statistics statistics = Statistics.instance();
 	public CustomerGroupDetails(String manager) {
 		groupManager = manager;
 		requests = new Vector<RentalRequest>();
@@ -89,8 +89,10 @@ public class CustomerGroupDetails {
         if (totalDamage>100)
         	totalDamage=100;
         executor.shutdown();
-
+        statistics.addRequest(requests.firstElement());
+        statistics.addReward(calculateReward());
         updateAssetAndRequest(totalDamage);
+        
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
@@ -102,6 +104,10 @@ public class CustomerGroupDetails {
 		//requests.firstElement().linked().updateStatus();
 	}
 	
+	private int calculateReward() {
+		return whereAreWe().cost() * requests.firstElement().period();
+	}
+
 	/**
 	 * updates the damage caused to the asset in the current request
 	 * and removes the request from the requests list

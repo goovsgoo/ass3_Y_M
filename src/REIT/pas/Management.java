@@ -59,6 +59,7 @@ public class Management {
 	private CountDownLatch latch;
 	private Vector<String> toolNames;
 	private Vector<String> materialNames;
+	private CyclicBarrier nightBarrier;
 
 	
 	/**constructs a new Management object.
@@ -306,6 +307,7 @@ public class Management {
 	 * @param numberOfMaintenancePersons - amount of Maintenance Men
 	 */
 	public void setNumberOfMaintenanceMen(int numberOfMaintenancePersons) {
+		nightBarrier = new CyclicBarrier(numberOfMaintenancePersons);
 		for (int i = 0; i < numberOfMaintenancePersons; i++) {
 			RunnableMaintenanceRequest newMan = new RunnableMaintenanceRequest(i);
 			MaintenanceMen.add(newMan);
@@ -322,5 +324,9 @@ public class Management {
 			}
 			return null;
 		}
+
+	public int numberOfMaintenanceMen() {
+		return MaintenanceMen.size();
+	}
 
 }

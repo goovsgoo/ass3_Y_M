@@ -46,7 +46,7 @@ public class Statistics {
 	/**
 	 * @param reward - reward of rental request to sum up.
 	 */
-	public void getReward(int reward){
+	public void addReward(int reward){
 		rewards += reward;
 	}
 	

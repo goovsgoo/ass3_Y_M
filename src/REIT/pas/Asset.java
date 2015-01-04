@@ -307,4 +307,9 @@ public class Asset implements Comparable<Asset>{
 	public String statusAssest(){
 		return status;
 	}
+
+
+	public int cost() {
+		return COST;
+	}
 }
