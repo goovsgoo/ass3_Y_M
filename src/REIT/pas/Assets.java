@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.*;
-//import java.lang.Math;
-//import java.awt.geom.Point2D;
-//import java.util.HashMap;
+
 
 /*
  * 2.3 Assets
@@ -21,18 +19,18 @@ There are two objects to tasks for this class:
  * this class simulates an Assets.
  */
 public class Assets{
-	private Vector<Asset> AssetsCollection;	 //by size
-	//private Management management = Management.instance();
-	private static Assets SAMPLE = null;
+	private Vector<Asset> AssetsCollection;	
+	private static Assets SAMPLEAsset = null;
+	private Management management ;
 	
 	/** this method is a factury method.
 	 *  cares that only once will be initialized an object
 	 * @return sample of Assets
 	 */
-	static public Assets sample(){
-		if (SAMPLE == null)
-			SAMPLE = new Assets();
-		return SAMPLE;
+	static public Assets sampleAsset(){
+		if (SAMPLEAsset == null)
+			SAMPLEAsset = new Assets();
+		return SAMPLEAsset;
 	}
 	
 	/**
@@ -75,19 +73,27 @@ public class Assets{
 	 * finds an asset that we need to fix
 	 * @return
 	 */
-	public synchronized Asset findAssetToFix() {
-		// Assets assets = Assets.sample();
+	public synchronized Asset findAssetToFix(){
+		management = Management.sample();
 		boolean found = false;
 		int i = 0;
 		Asset matchingAsset = null;
 		while (!found && i < size()) {
+			
+			if(management.getNumAssetToFix()==0){
+				return Management.DEADEND.linked();
+			}
+			
 			if (AssetsCollection.get(i).assetHealth() <= 65 && AssetsCollection.get(i).canTheMaintenceManCome()) {
 				matchingAsset = AssetsCollection.get(i);
 				found = true;
 				matchingAsset.changeFixingStatus();
 			}
+			
+			i++;
 		}
 		return matchingAsset;
+		
 	}
 	
 	/**

@@ -94,6 +94,9 @@ public class CustomerGroupDetails {
         DamageReport report = new DamageReport();
         report.assignAsset(sendRequest().linked());
         report.updateDamage(totalDamage);
+      management.increaseNumAssetToFix();
+        
+        
          //management.shouldRepair(sendRequest().linked());
         // TODO remove request after we are done with it
         
@@ -112,8 +115,12 @@ public class CustomerGroupDetails {
 		requests.firstElement().updateStatus();
 		//whereAreWe().updateStatus();
 		requests.removeElementAt(0);
-		mainLatch.countDown();
-		//System.out.println("yay, we handled a request");
+		//mainLatch.countDown();
+		try {
+			management.requestLatchEject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

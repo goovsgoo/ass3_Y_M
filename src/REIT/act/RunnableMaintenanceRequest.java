@@ -32,7 +32,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 	private Management management ;
 	private Warehouse warehouse ;
 	private int ID;
-	private Assets assets = Assets.sample();
+	private Assets assets = Assets.sampleAsset();
 	
 	/**
 	 * constructs new RunnableMaintenanceRequest object
@@ -49,34 +49,38 @@ public class RunnableMaintenanceRequest implements Runnable {
 	
 	/**
 	 * @Override run method.
-	 * simulates the order's distribution between the chefs.
 	 */
-	public void run()  {	
+	public void run()  {
+		
+		for(;;){
 		Asset assetToFix = null;
 		while (assetToFix == null) {
 			assetToFix = assets.findAssetToFix();
 		}
-		asset = assetToFix;
-		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
-		// fix the asset
-		try {
-			asset.fixAsset();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		if (assetToFix == Management.DEADEND.linked()){
+			this.shutdown();
+			break;
 		}
 		
-		Management.LOGGER.fine(new StringBuilder(ID).append(" is SHUTTING DOWN...").toString());
+		asset = assetToFix;
+		Management.LOGGER.finer(new StringBuilder(ID).append(" started fix at ").append(asset.toString()).toString());
+
+		try {
+			asset.fixAsset(); } catch (InterruptedException e) {e.printStackTrace();}
+		
+		}
 	}
 	
 	/**
-	 * when all orders were cooked - shuts down the chefs (update the active field to false).
+	 * shutdown runnable maintenance
 	 */
 	public synchronized void shutdown(){
-		if (active){
-		//	this.active = false;
-		//	this.notifyAll();
-		//	Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
+		Management.LOGGER.finer(new StringBuilder(ID).append(" is end the work for today.").toString());
+		if(management.getNumAssetToFix()==0){
+			try {
+				management.clerksLatchCountDown(); } catch (Exception e) {e.printStackTrace();
+			}
 		}
 	}
 	

@@ -47,8 +47,9 @@ It will simulate retrieving a new order to deliver as follows:
 public class RunnableClerk implements Runnable{
 	final private String NAME; 
 	private Point2D.Double location; 
+	private long startDayClock;
 	// private Statistics rewardStatistics = Statistics.instance();
-	private boolean active;
+	//private boolean active;
 	private Management management = Management.sample();
 	//private Exchanger<String> exchangePipe;
 
@@ -61,7 +62,9 @@ public class RunnableClerk implements Runnable{
 	public RunnableClerk(String clerkName, Point2D.Double clerckLocation){
 		this.NAME = clerkName;
 		this.location = clerckLocation;
-		this.active = true;
+		startDayClock=0;
+		
+		//this.active = true;
 	}
 	
 	/**
@@ -69,34 +72,50 @@ public class RunnableClerk implements Runnable{
 	 * simulates a clerk receiving asset and matching request and handling them
 	 */	
 	public void run() {
-		while (this.active){
-				RentalRequest requestMatching = null;
-				while (requestMatching == null) {
-					try {
-						requestMatching = management.findAssetRequestMatch();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				Asset asset = requestMatching.linked();					
-				if (asset == Management.DEADEND){
-					this.shutdown();
-				} 
-				else {
-					this.goConfirmAsset(asset);
-					try {
-						requestMatching.notifyBooking();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				active = false;
-			 	Management.LOGGER.info(new StringBuilder("the clerk: ").append(NAME).append(" back to base").toString());	
+		
+		startDayClock = System.currentTimeMillis();
+		
+		for(;;){
+			
+			if(endOfDay()){
+			 	Management.LOGGER.info(new StringBuilder("the clerk: ").append(NAME).append(" stop to work for today").toString());	
+				try {
+					management.clerksLatchEject(); } catch (Exception e) {e.printStackTrace();}
+			}
+			
+			RentalRequest requestMatching = null;
+			while (requestMatching == null) {
+				try {
+					requestMatching = management.findAssetRequestMatch(); } catch (Exception e) {e.printStackTrace();}
+			}
+			
+			if (requestMatching == Management.DEADEND){
+				this.shutdown();
+				break;
+			}
+			
+			Asset asset = requestMatching.linked();
+			this.goConfirmAsset(asset);
+			try {
+				requestMatching.notifyBooking(); } catch (InterruptedException e) {e.printStackTrace();}
+
+		 	Management.LOGGER.info(new StringBuilder("the clerk: ").append(NAME).append(" back to base").toString());	
 		}
+		
 	}
 	
+	/**
+	 * 
+	 * @return true if Clock work under 8 hours 
+	 */
+	 private boolean endOfDay() {
+		 if (System.currentTimeMillis() - startDayClock  > 800)
+			 return true;
+		 else 
+			 return false;
+	}
 
-	 /**
+	/**
 	 * simulate the time that passes as the clerk go to "verify" the asset to rent
 	 * @param asset
 	 */
@@ -156,12 +175,8 @@ public class RunnableClerk implements Runnable{
 		return printOut.toString();
 	}
 	
-	/**
-	 * when all orders were delivered - shuts down the delivery persons (update the active field to false).
-	 */
-	public void shutdown(){
-		this.active = false;
-		Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
+	private void shutdown(){
+		//Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
 	}
 
 }

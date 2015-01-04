@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.*;
-
 import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import REIT.act.*;
 
 /*
@@ -44,38 +42,54 @@ How?
  * this class manage REIT.
  */
 public class Management {
+	
 	private Assets assets;
-	private Warehouse warehouse;
-	private ArrayList<RunnableClerk> clerks;
-	private Vector<RunnableMaintenanceRequest> MaintenanceMen;
-	private ArrayList<CustomerGroupDetails> customerGroupDetails;
-	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
 	private ArrayList<AssetContent> assetContent;
-	static public Logger LOGGER;
-	static public Asset DEADEND = new Asset(0, "end", 0, null, 0);
-	private static Management SAMPLE = null;
-	private ExecutorService executor;
-	private int counter;
-	private CountDownLatch latch;
+	
+	private Warehouse warehouse;
 	private Vector<String> toolNames;
 	private Vector<String> materialNames;
-
 	
+	private ArrayList<RunnableClerk> clerks;
+	private CountDownLatch clerksLatch;
+	
+	private Vector<RunnableMaintenanceRequest> MaintenanceMen;
+	private CountDownLatch assetToFixLatch;
+	private int numAssetToFix;
+	
+	private ArrayList<CustomerGroupDetails> customerGroupDetails;
+	private ArrayList<RunnableCustomerGroupManager> customerGroupManager;
+	
+	static public Logger LOGGER;
+	static public RentalRequest DEADEND = new RentalRequest("end","end",0,0);
+	private static Management SAMPLE = null;
+	private ExecutorService executor;
+	
+	private int requestCounter;
+	private CountDownLatch requestLatch;
+	
+
 	/**constructs a new Management object.
 	 */
 	private Management(){
-		assets = Assets.sample();
-		warehouse = Warehouse.sample();
-		clerks= new ArrayList<RunnableClerk>();
-		this.counter = 0;
-		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
-		executor = Executors.newCachedThreadPool();
-		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
-		MaintenanceMen = new Vector<RunnableMaintenanceRequest>();
+		
+		assets = Assets.sampleAsset();
 		assetContent = new ArrayList<AssetContent>();
+		
+		warehouse = Warehouse.sample();
 		toolNames=new Vector<>();
 		materialNames=new Vector<>();
-		//calculateToolsMaterials();
+		
+		clerks= new ArrayList<RunnableClerk>();
+		//clerksLatch = new CountDownLatch(clerks.size()+1);
+		
+		MaintenanceMen = new Vector<RunnableMaintenanceRequest>();
+		numAssetToFix=0;
+		
+		customerGroupManager = new ArrayList<RunnableCustomerGroupManager>();
+		customerGroupDetails = new ArrayList<CustomerGroupDetails>();
+		
+		executor = Executors.newCachedThreadPool();
 		
 		try {
 			LOGGER = Logger.getLogger(Management.class.getName());
@@ -90,6 +104,11 @@ public class Management {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		DEADEND.LinkAsset( new Asset(-1,"end",0,new Point2D.Double(0, 0),0));
+		
+		
+		this.requestCounter = 0; 
 	}
 	
 	/** this method is a factory method.
@@ -112,27 +131,31 @@ public class Management {
 	 * shut down when CountDownLatch = 0
 	 */
 	public void start(){
-		assets.sort();											
-		LOGGER.info("Simulation Session Started.");				
+		assets.sort();	
+		
+		LOGGER.info("Simulation Session Started.");	
+		
+		requestLatch = new CountDownLatch(requestCounter);
+		
 		for (RunnableCustomerGroupManager groupManager : customerGroupManager){
 			executor.execute(groupManager);
 		}
 		for (RunnableClerk clerk : clerks){
 			executor.execute(clerk);
 		}
-		for (RunnableMaintenanceRequest maintenance : MaintenanceMen){
-			executor.execute(maintenance);
-		}
+		clerksLatch = new CountDownLatch(clerks.size()+1);
+		//for (RunnableMaintenanceRequest maintenance : MaintenanceMen){
+		//	executor.execute(maintenance);
+		//}
 		
-		latch = new CountDownLatch(counter);
-		linkGroupsToCountDown();
+	
+		//linkGroupsToCountDown();
 		
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	//	try {
+		//	requestLatch.await();
+	//	} catch (InterruptedException e) {
+	//		e.printStackTrace();
+	//	}
 		shutdown();
 		
 	}
@@ -157,7 +180,10 @@ public class Management {
 	 * @throws Exception 
 	 */
 	public synchronized RentalRequest findAssetRequestMatch() throws Exception {
-		Assets assets = Assets.sample();
+		if(requestCounter==0){
+			return DEADEND;
+		}
+		////Assets assets = Assets.sampleAsset();
 		boolean found = false;
 		int i = 0;
 		Asset matchingAsset = null;
@@ -258,14 +284,14 @@ public class Management {
 	 */
 	private void linkGroupsToCountDown() {
 		for (CustomerGroupDetails group : customerGroupDetails)
-			group.linkLatch(latch);
+			group.linkLatch(requestLatch);
 	}
 
 	/**
 	 * increase the request counter by one (for testing, not realy necessary) 
 	 */
 	public void incrementCounter() {
-		counter++;
+		requestCounter++;
 	}
 
 	/**
@@ -298,7 +324,7 @@ public class Management {
 	 * @param totalNumberOfRentalRequests
 	 */
 	public void setCount(int totalNumberOfRentalRequests) {
-		counter = totalNumberOfRentalRequests;
+		requestCounter = totalNumberOfRentalRequests;
 	}
 
 	/**
@@ -323,4 +349,58 @@ public class Management {
 			return null;
 		}
 
+	
+	/**
+	 * Increase clerksLatch by 1
+	 * @throws Exception
+	 */
+	public void clerksLatchCountDown() throws Exception {
+		if(clerksLatch.getCount()>0)
+			clerksLatch.countDown();	
+	}
+	
+	/**
+	 * all the clerks wait for the next day
+	 * @throws Exception
+	 */
+	public void clerksLatchEject() throws Exception {
+		synchronized(this){
+			clerksLatchCountDown();
+			if(clerksLatch.getCount() == 1){
+				for (RunnableMaintenanceRequest maintenance : MaintenanceMen){
+					executor.execute(maintenance);
+				}
+			}
+		}
+		clerksLatch.await();
+	}
+	
+	/**
+	 * all the clerks wait for the next day
+	 * @throws Exception
+	 */
+	public void requestLatchEject() throws Exception {
+		requestLatch.countDown();
+	}
+
+	/**
+	 * 
+	 * @return number of asset to fix
+	 */
+	public int getNumAssetToFix() {
+		return numAssetToFix;
+	}
+	/**
+	 * increase number of asset To Fix by 1
+	 */
+	public void increaseNumAssetToFix() {
+		numAssetToFix++;
+	}
+	
+	/**
+	 * decrease number of asset To Fix by 1
+	 */
+	public void decreaseNumAssetToFix() {
+		numAssetToFix--;
+	}
 }

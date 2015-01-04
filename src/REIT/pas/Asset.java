@@ -42,7 +42,7 @@ public class Asset implements Comparable<Asset>{
 	final private int COST;
 	final private int SIZE;
 	private double health;
-	private Management management = Management.sample();
+	private Management management ;
 	boolean fixing;
 	
 	private static Warehouse warehouse = Warehouse.sample();
@@ -123,15 +123,17 @@ public class Asset implements Comparable<Asset>{
 	 * @throws InterruptedException 
 	 */
 	public void fixAsset() throws InterruptedException {
+		management = Management.sample();
+		
 		warehouse.acquire(this);
 		long cost = calculateCost(); 
 		Thread.sleep(cost);
 		warehouse.release(this);
 		health = 100;
 		updateStatus();
-		Management.LOGGER.info(new StringBuilder("Fixed asset - ").append(ID).toString());
 		changeFixingStatus();
-		// management.endOfFixing();
+		management.decreaseNumAssetToFix();
+		Management.LOGGER.info(new StringBuilder("Fixed asset - ").append(ID).toString());
 	}
 	
 	/**
