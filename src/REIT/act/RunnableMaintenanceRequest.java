@@ -56,7 +56,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 		while (assetToFix == null) {
 			assetToFix = assets.findAssetToFix();
 		}
-		
+		asset = assetToFix;
 		Management.LOGGER.finer(new StringBuilder("started fix at ").append(asset.toString()).toString());
 		// fix the asset
 		try {

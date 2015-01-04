@@ -1,7 +1,9 @@
 package REIT.pas;
 
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.awt.geom.Point2D;
@@ -79,7 +81,9 @@ public class Management {
 			LOGGER = Logger.getLogger(Management.class.getName());
 			FileHandler handler = new FileHandler("REIT.log");
 			handler.setFormatter(new SimpleFormatter());
+			handler.setLevel(Level.ALL);
 			LOGGER.addHandler(handler);
+			LOGGER.setLevel(Level.FINER);
 			} 
 		catch (SecurityException e) {
 			e.printStackTrace();

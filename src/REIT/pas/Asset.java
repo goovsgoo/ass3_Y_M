@@ -129,6 +129,7 @@ public class Asset implements Comparable<Asset>{
 		warehouse.release(this);
 		health = 100;
 		updateStatus();
+		Management.LOGGER.info(new StringBuilder("Fixed asset - ").append(ID).toString());
 		changeFixingStatus();
 		// management.endOfFixing();
 	}
@@ -166,8 +167,12 @@ public class Asset implements Comparable<Asset>{
 	protected int isNeeded(RepairTool testedTool){
 		int needed = 0;
 		for (AssetContent content : assetContentCollection) {
-			if (content.returnCopyTools().containsKey(testedTool.toString()))
-				needed = Math.max(needed, content.returnCopyTools().get(testedTool).intValue());	
+			if (content.returnCopyTools().containsKey(testedTool.toString())){
+				HashMap<String, Integer> copyOfTools = content.returnCopyTools();
+				String toolNme = testedTool.toString();
+				int amount = copyOfTools.get(toolNme).intValue();
+				needed = Math.max(needed, amount);
+			}
 		}
 		return needed;
 	}
