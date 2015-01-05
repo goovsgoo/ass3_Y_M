@@ -30,19 +30,12 @@ public class RunnableMaintenanceRequest implements Runnable {
 	private boolean active;
 	private Asset asset ;
 	private Management management ;
-	private Warehouse warehouse ;
 	private int ID;
 	private Assets assets = Assets.sampleAsset();
 
 	
-	/**
-	 * constructs new RunnableMaintenanceRequest object
-	 * @param name
-	 */
 	public RunnableMaintenanceRequest(int id){
-		// asset = assetToFix;
 		management = Management.sample();
-		warehouse = Warehouse.sample();
 		this.active = true;
 		executor = Executors.newCachedThreadPool();
 		this.ID = id;
@@ -58,7 +51,7 @@ public class RunnableMaintenanceRequest implements Runnable {
 			Asset assetToFix = null;
 			while (assetToFix == null) {
 				
-				if (System.currentTimeMillis() - timeForFix >= 1600){
+				if (System.currentTimeMillis() - timeForFix >= 16000){
 					synchronized(this){
 						this.shutdown();
 						needBreak=true;
@@ -94,14 +87,14 @@ public class RunnableMaintenanceRequest implements Runnable {
 	}
 	
 	/**
-	 * overrides toString method.
+	 * @Override toString method.
 	 */
 	public String toString(){
 		return this.ID+" "+active;
 	}
 
 	/**
-	 * 
+	 * shutdown Executor
 	 */
 	public void shutdownExecutor() {
 		executor.shutdown();

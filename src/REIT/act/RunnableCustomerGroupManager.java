@@ -19,19 +19,14 @@ public class RunnableCustomerGroupManager implements Runnable {
 	 * simulates a group manager - the staying in the asset and the updates that comes afterwards
 	 */
 	public void run() {
-		
-		// keep running until all requests are fulfilled
+	
 		while(group.anyMoreRequests()) { 
-
-			// wait for a request to get handled by a clerk
-			//while (group.statOfCurrentRequest() != "InProgress");
 			try {
 				group.getAsset();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 			Management.LOGGER.info(new StringBuilder(group.managerName()).append(" is now get into asset ").toString());	
-			// wait for stay in asset to end and update asset's total damage and status
 			try {
 				group.sleepInAsset(); } catch (InterruptedException e) {e.printStackTrace();} catch (ExecutionException e) {e.printStackTrace();}
 		}	

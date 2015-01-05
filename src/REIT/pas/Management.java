@@ -1,20 +1,14 @@
 package REIT.pas;
 
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Vector;
-import java.util.Map.Entry;
 import java.util.concurrent.*;
-
-import javax.swing.text.StyleContext.SmallAttributeSet;
 import REIT.act.*;
 
 /*
@@ -75,8 +69,6 @@ public class Management {
 	private int end = 0;
 	
 
-	/**constructs a new Management object.
-	 */
 	private Management(){
 		
 		assets = Assets.sampleAsset();
@@ -133,7 +125,7 @@ public class Management {
 	
 	/**
 	 * start the REIT simulation
-	 * shut down when CountDownLatch = 0
+	 * shut down when end = 1
 	 */
 	public void start(){
 		assets.sort();	
@@ -194,12 +186,12 @@ public class Management {
 	
 	
 	/**
-	 * 
+	 *  shutdown Management
 	 */
 	protected void shutdown(){
 		while(end==0);
 		try {Thread.sleep(5000);} catch (InterruptedException e) {e.printStackTrace();}
-		while(numMaintenanceMen ==0);
+		while(numMaintenanceMen != 0);
 		executor.shutdown();
 		LOGGER.info("End of Simulation.");
 		LOGGER.info(Statistics.instance().toString());
@@ -301,14 +293,17 @@ public class Management {
 	 * @param numberOfMaintenancePersons - amount of Maintenance Men
 	 */
 	public void setNumberOfMaintenanceMen(int numberOfMaintenancePersons) {
-		//numMaintenanceMen=numberOfMaintenancePersons;
 		for (int i = 0; i < numberOfMaintenancePersons; i++) {
 			RunnableMaintenanceRequest newMan = new RunnableMaintenanceRequest(i);
 			MaintenanceMen.add(newMan);
 		}
 	}
 
-	
+	/**
+	 * find Asset Content By Name
+	 * @param assetContentName
+	 * @return AssetContent
+	 */
 	public AssetContent findAssetContentByName(String assetContentName) {
 			int i;
 			for(i = 0;i< assetContent.size() || assetContent.get(i).equals(assetContentName);i++)

@@ -43,4 +43,13 @@ health of the asset, only the RunnableCustomerGroupManager.
 			return 0.5;
 		}
 	}
+	
+	/**
+	 * overrides toString method.
+	 */
+	public String toString(){
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("name: ").append(name).append(" ").append(vandalismType);
+		return printOut.toString();
+	}
 }

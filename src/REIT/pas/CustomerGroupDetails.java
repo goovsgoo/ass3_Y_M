@@ -3,7 +3,7 @@ package REIT.pas;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.CountDownLatch;
+//import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -24,17 +24,12 @@ public class CustomerGroupDetails {
 	private final String groupManager;
 	private Vector<RentalRequest> requests;
 	private ArrayList<Customer> customers;
-	private CountDownLatch mainLatch;
 	private Management management = Management.sample();	
 	private Statistics statistics = Statistics.instance();
 	public CustomerGroupDetails(String manager) {
 		groupManager = manager;
 		requests = new Vector<RentalRequest>();
 		customers = new ArrayList<Customer>();
-	}
-	
-	protected void linkLatch(CountDownLatch latch) {
-		mainLatch = latch;
 	}
 	
 	/**
@@ -90,16 +85,8 @@ public class CustomerGroupDetails {
         	totalDamage=100;
         executor.shutdown();
         statistics.addRequest(requests.firstElement());
-        statistics.addReward(calculateReward());
+        statistics.addReward(calculateReward()*numerOfCustomers);
         updateAssetAndRequest(totalDamage);
-
-        
-         //management.shouldRepair(sendRequest().linked());
-        // TODO remove request after we are done with it
-        
-     // updates request and asset to "Complete"
-       	//requests.firstElement().updateStatus();
-		//requests.firstElement().linked().updateStatus();
 	}
 	
 	/**
@@ -176,14 +163,9 @@ public class CustomerGroupDetails {
 	}
 	
 	/**
-	 * for overrides toString method  
+	 * @override toString method  
 	 */
 	public String toString(){
-		//return this.groupManager;
-		/*private final String groupManager;
-		private Vector<RentalRequest> requests;
-		private ArrayList<Customer> customers;
-	*/
 		StringBuilder printOut = new StringBuilder();
 		printOut.append("New customers gruop : ").append(groupManager).append(" ,Requests :");
 		for(int i = 0;i< requests.size();i++){

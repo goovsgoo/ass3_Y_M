@@ -26,7 +26,6 @@ the higher the time it takes to repair. Health begins at 100, can be fractions, 
 public class AssetContent {
 	final private String NAME;
 	private float repairMultiplier;
-	//private int health;
 	private HashMap<String, Integer> materials;
 	private HashMap<String, Integer> tools;
 	
@@ -37,7 +36,6 @@ public class AssetContent {
 	 */
 	public AssetContent(String name){
 		repairMultiplier=1;
-		//health=100;
 		this.NAME = name;
 		tools = new HashMap<String, Integer>();
 		materials = new HashMap<String, Integer>();
@@ -109,16 +107,6 @@ public class AssetContent {
 			printOut.append("][Material quantity: ").append(materials.get(objname)).append("]");
 		}
 		return printOut.toString();
-	}
-	
-	/**
-	 * simulates the fix of the content.
-	 * the Thread sleep while fix of the content.
-	 * @param time , (100-health)*RepairMultiplier in milesec.
-	 * @throws InterruptedException
-	 */
-	public void fix(double time) throws InterruptedException{
-		Thread.sleep(Math.round(time));
 	}
 	
 	/**

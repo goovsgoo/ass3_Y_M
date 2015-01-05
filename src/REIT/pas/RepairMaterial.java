@@ -8,8 +8,7 @@ Found in: Warehouse
 fields: (1) Name (2) Quantity.
 
 This object is destined to be in the warehouse. It will hold the name of the material, as well as the
-current quantity found in the warehouse. Ensure thread safety in this object. How is this different
-than Repair Tool's implementation?
+current quantity found in the warehouse. Ensure thread safety in this object.
  */
 
 /**
@@ -99,7 +98,7 @@ public class RepairMaterial {
 	 * checks the available quantity. used for testing.
 	 * @return this.quantity.
 	 */
-	protected int quantity(){  						//Is that neccsry? (not Change from Itay)
+	protected int quantity(){  						
 		return this.quantity;
 	}
 	

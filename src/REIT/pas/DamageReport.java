@@ -37,4 +37,15 @@ the customers of the group.
 		damagePercentage = damage;
 	}
 	
+	/**
+	 * return string print the damage report
+	 * @param printDamageReport
+	 */
+	protected String printDamageReport() {
+		StringBuilder printOut = new StringBuilder("-DamageReport-");
+		printOut.append("asset : ").append(asset);
+		printOut.append(" damagePercentage : ").append(damagePercentage);
+		return printOut.toString();
+	}
+	
 }

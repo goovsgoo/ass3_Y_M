@@ -1,9 +1,9 @@
 package REIT.pas;
 
 import java.util.Collections;
-import java.util.Iterator;
+
 import java.util.Vector;
-import java.util.concurrent.*;
+
 
 
 /*
@@ -21,7 +21,6 @@ There are two objects to tasks for this class:
 public class Assets{
 	private Vector<Asset> AssetsCollection;	
 	private static Assets SAMPLEAsset = null;
-	private Management management ;
 	
 	/** this method is a factury method.
 	 *  cares that only once will be initialized an object
@@ -33,9 +32,6 @@ public class Assets{
 		return SAMPLEAsset;
 	}
 	
-	/**
-	 * constructs a new Asset object by name.
-	 */
 	private Assets(){
 		AssetsCollection = new Vector<Asset>();
 	}
@@ -71,19 +67,13 @@ public class Assets{
 	
 	/**
 	 * finds an asset that we need to fix
-	 * @return
+	 * @return Asset
 	 */
 	public synchronized Asset findAssetToFix(){
-		management = Management.sample();
 		boolean found = false;
 		int i = 0;
 		Asset matchingAsset = null;
 		while (!found && i < size()) {
-			
-			//if(management.getNumAssetToFix()==0){
-			//	return Management.DEADEND.linked();
-			//}
-			
 			if (AssetsCollection.get(i).assetHealth() <= 65 && AssetsCollection.get(i).canTheMaintenceManCome()) {
 				matchingAsset = AssetsCollection.get(i);
 				found = true;

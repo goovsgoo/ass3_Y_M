@@ -144,7 +144,6 @@ public class Parser {
 	 	management.setCount(totalNumberOfRentalRequests);
 	 	PRELOGGER.info(new StringBuilder("The total Number Of RentalRequests is : ").append(totalNumberOfRentalRequests).toString());
 	 	PRELOGGER.info(new StringBuilder("The number Of maintenance Persons is : ").append(numberOfMaintenancePersons).toString());
-		//Maybe start here - RunnableMaintaineceRequest? ~ Yoed
 	}
 			
 	private static void parseAssetContentsRepairDetails(Document assetContentsDoc){
@@ -284,7 +283,6 @@ public class Parser {
 		 				RentalRequest newRequest = new RentalRequest(requestID, Type, Size, Duration);
 		 				newRequest.assignGroupManager(newCustomerGroup);
 		 				newCustomerGroup.addRequest(newRequest);
-		 				//management.incrementRequestCounter();
 				 	}
 				}
 			management.addGroup(newCustomerGroup);	

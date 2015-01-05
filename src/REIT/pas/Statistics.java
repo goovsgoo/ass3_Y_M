@@ -59,7 +59,7 @@ public class Statistics {
 	}
 	
 	/**
-	 * adds consumed materials - name, how much left and how much consumed.
+	 * adds consumed materials name, how left and how consumed.
 	 * @param material
 	 * @param quantity
 	 */
@@ -87,8 +87,8 @@ public class Statistics {
 	 * overrides toString method.
 	 */
 	public String toString(){
-		StringBuilder printOut = new StringBuilder("\n\n\n===================\nS T A T I S T I C S \n===================\n\n");
-		printOut.append("Money Gained: ").append(rewards).append("\n\n");
+		StringBuilder printOut = new StringBuilder("\n\n\n=================\nS T A T I S T I C S \n=================\n\n");
+		printOut.append("Money Gained : ").append(rewards).append("\n\n");
 		
 		printOut.append("Requsets done\n");
 		for (RentalRequest request : requests){

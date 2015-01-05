@@ -1,6 +1,6 @@
 package REIT.pas;
 
-import REIT.act.RunnableCustomerGroupManager;
+
 
 
 /*2.13 RentalRequest
@@ -16,7 +16,7 @@ possible of the ones found.
 CustomerGroupManager.
 5. Request status: One of four possible options:
 (a) Incomplete: If the request has not been handled yet.
-(b) Fulfilled: If the request has been fullled, but the customer has not used it yet.
+(b) Fulfilled: If the request has been fulfilled, but the customer has not used it yet.
 (c) InProgress: The customer is occupying the asset currently.
 (d) Complete: The customer has left the asset.
 Note: This object will be sent to CallableSimulateStayInAsset which will simulate the rental process
@@ -27,7 +27,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	private final String ID;
 	private final String assetType;
 	private final int assetSize;
-	private final long stay;		//why this is "long" type???
+	private final long stay;	
 	private Asset assetLinked;
 	private String status;
 	private String groupManager;
@@ -79,7 +79,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	}
 	
 	/**
-	 * the minimum asset size to fulfill the request.
+	 * the minimum asset size to fulfilled the request.
 	 * @return minimum number of rooms in the requested asset 
 	 */
 	public int minSizeRequested() {
@@ -137,7 +137,7 @@ public class RentalRequest implements Comparable<RentalRequest>{
 	}
 
 	/**
-	 * @return the time wich they wish to stay
+	 * @return the time which they wish to stay
 	 */
 	public int period() {
 		return (int) stay;

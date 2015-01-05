@@ -1,7 +1,6 @@
 package REIT.act;
 
 import java.awt.geom.Point2D;
-import java.util.concurrent.Exchanger;
 
 import REIT.pas.*;
 
@@ -48,11 +47,7 @@ public class RunnableClerk implements Runnable{
 	final private String NAME; 
 	private Point2D.Double location; 
 	private long startDayClock;
-	// private Statistics rewardStatistics = Statistics.instance();
-	//private boolean active;
 	private Management management = Management.sample();
-	//private Exchanger<String> exchangePipe;
-
 	
 	/**
 	 * constructs a new clerk
@@ -63,8 +58,6 @@ public class RunnableClerk implements Runnable{
 		this.NAME = clerkName;
 		this.location = clerckLocation;
 		startDayClock=0;
-		
-		//this.active = true;
 	}
 	
 	/**
@@ -74,7 +67,6 @@ public class RunnableClerk implements Runnable{
 	public void run() {
 		
 		startDayClock = System.currentTimeMillis();
-		boolean needBreak = false;
 		
 		for(;;){
 			RentalRequest requestMatching = null;
@@ -99,7 +91,6 @@ public class RunnableClerk implements Runnable{
 
 		 	Management.LOGGER.info(new StringBuilder("the clerk: ").append(NAME).append(" back to base").toString());	
 		}
-		Management.LOGGER.info(new StringBuilder("the clerk ").append(NAME).append(" is now exit from Simulation ").toString());	
 	}
 	
 	/**
@@ -121,6 +112,7 @@ public class RunnableClerk implements Runnable{
 		int distance = calculateDistance(asset);
 		Management.LOGGER.info(new StringBuilder(NAME).append(NAME).append(" going to asset number - ").append(asset.assetID()).toString());
 		long timeToFullFulfil = walkTo(distance);
+		Management.LOGGER.info(new StringBuilder(NAME).append(NAME).append(" arrive to ").append(asset.assetID()).append(" at ").append(timeToFullFulfil).toString());
 		asset.updateStatus();
 	}
 	
@@ -133,30 +125,26 @@ public class RunnableClerk implements Runnable{
 		double y = Math.pow(this.location.getY()-asset.adress().getY(),2);
 		double x = Math.pow(this.location.getX()-asset.adress().getX(),2);
 		return (int)(Math.sqrt(y+x));
-		//return (int)(Math.sqrt((this.location.getY()-asset.adress().getY())*(this.location.getY()-asset.adress().getY())) + ((this.location.getX()-asset.adress().getX())*(this.location.getX()-asset.adress().getX())));
 	}
 
 	/**	
-	 * 
+	 * simulates walk to asset
 	 * @return 
 	 */
 	public long walkTo(int distance){
-		// TODO do we calculate the time like that????????????
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Thread.sleep(distance*100);
+			Thread.sleep(distance*1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		long finishTime = System.currentTimeMillis();
 			
 		try {
-			Thread.sleep(distance*100);
+			Thread.sleep(distance*1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -174,7 +162,7 @@ public class RunnableClerk implements Runnable{
 	}
 	
 	private void shutdown(){
-		//Management.LOGGER.finer(new StringBuilder(NAME).append(" is DEACTIVATING.").toString());
+		Management.LOGGER.info(new StringBuilder("the clerk ").append(NAME).append(" is now exit from Simulation ").toString());	
 	}
 
 }

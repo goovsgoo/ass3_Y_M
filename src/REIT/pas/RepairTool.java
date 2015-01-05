@@ -5,7 +5,7 @@ import java.util.concurrent.*;
  * 2.7 RepairTool
 
 This object is destined to be in the warehouse. It will hold the name of the tool, as well as the
-current quantity found in the warehouse. Ensure thread safety in this object. Why? How?
+current quantity found in the warehouse. Ensure thread safety in this object. 
 
  */
 
@@ -65,7 +65,6 @@ public class RepairTool {
 	 * @return this.quantity.
 	 */
 	protected int quantity(){
-		// quantity of tool is actually stored as number of aviable permits 
 		return this.RepairToolSemaphore.availablePermits();
 	}
 
@@ -84,7 +83,6 @@ public class RepairTool {
 	 */
 	protected void acquire(int numOfTools){
         Management.LOGGER.finest(new StringBuilder("attempting to acquire ").append(NAME).toString());
-		//this RepairTool is trying to acquire a semaphore.
 		try 
 		{
 			RepairToolSemaphore.acquire(numOfTools);

@@ -24,7 +24,6 @@ public class Drive {
 			try {
 				Parser.parseFile(arg);
 			} catch (ParserConfigurationException | SAXException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

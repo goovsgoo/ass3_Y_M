@@ -1,14 +1,11 @@
 package REIT.pas;
 
-import java.util.concurrent.*;
+
 import java.lang.Math;
-import java.awt.geom.Arc2D.Double;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 /*
  * 2.1 Asset
 Found in: Management
@@ -179,15 +176,6 @@ public class Asset implements Comparable<Asset>{
 		return needed;
 	}
 	
-	/*
-	public void fixAsset() {
-		for (int i =0 ; i< assetContentCollection.size(); i++){
-			warehouse.acquire(assetContentCollection.get(i));
-		}
-
-	}
-	*/
-	
 	/**adds new Content and repairMultiplier to the AssetContentCollection
 	 */
 	protected void addNewContent(AssetContent content){
@@ -225,13 +213,13 @@ public class Asset implements Comparable<Asset>{
 	}
 	
 	/**
-	 * @Override
+	 * @Override toString
 	 */
 	@Override											
 	public String toString(){
 		StringBuilder printOut = new StringBuilder();
 		printOut.append("Asset: ");
-		printOut.append("[ID: ").append(ID).append("][location: ").append(LOCATION.getX()).append(",").append(LOCATION.getX());
+		printOut.append("[ID: ").append(ID).append("type: ").append(TYPE).append("][location: ").append(LOCATION.getX()).append(",").append(LOCATION.getX());
 		printOut.append("][Status: ").append(status).append("][Cost: ").append(COST).append("][Size: ").append(SIZE);
 		printOut.append("][Health: ").append(health).append("][Fixing: ").append(fixing);
 		printOut.append("] Contents : { ");
@@ -243,7 +231,7 @@ public class Asset implements Comparable<Asset>{
 	}
 	
 	/**
-	 * @Override
+	 * @Override compareTo
 	 * compare between this.size and other's size.
 	 */
 	@Override
@@ -273,35 +261,6 @@ public class Asset implements Comparable<Asset>{
 		return LOCATION;
 	}
 	
-	/**
-	 * Calculate tools and materials names for camper
-	 */
-	/*
-	private void calculateToolsMaterials() {
-		int i;
-		//from all the name in the project
-		Vector<String> copyMaterialsNames = management.returnCopyMaterial();
-		Vector<String> copyToolsNames = management.returnCopyTools();
-		
-		for(i = 0;i< assetContentCollection.size();i++){
-			
-			//from this Content
-			HashMap<String, Integer> copyTools = assetContentCollection.get(i).returnCopyTools();
-			HashMap<String, Integer> copyMaterials = assetContentCollection.get(i).returnCopyMaterials();
-			
-			/*
-			for (Entry<String, Integer> entry : copyTools.entrySet()) {
-				if( !copyToolsNames.contains(entry.getKey()) )
-					copyToolsNames.add(entry.getKey());
-			}
-			for (Entry<String, Integer> entry : copyMaterials.entrySet()) {
-				if( !copyMaterialsNames.contains(entry.getKey()) )
-					copyMaterialsNames.add(entry.getKey());
-			}
-			*//*
-		}
-	} 
-	*/
 	
 	/**
 	 * @return the status handling 

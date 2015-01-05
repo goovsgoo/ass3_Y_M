@@ -30,7 +30,7 @@ public class Warehouse implements WarehouseInterface {
 		RepairMaterials = new ArrayList<RepairMaterial>();
 	}
 	
-	/** this method is a factury method.
+	/** this method is a factory method.
 	 *  cares that only once will be initialized an object
 	 *  @return sample of Warehouse
 	 */
@@ -48,7 +48,6 @@ public class Warehouse implements WarehouseInterface {
 	 */
 	@Override
 	public void acquire(Asset asset) {
-		// acquire RepairTool
 		for (int i = 0 ; i < tools.size() ; i++){
 			RepairTool tool = tools.get(i);
 			int quantity = asset.isNeeded(tool);
@@ -57,7 +56,6 @@ public class Warehouse implements WarehouseInterface {
 				statistics.addUsedTool(tool);
 			}
 		}																
-		// acquire materials
 		for (int i = 0 ; i < RepairMaterials.size() ; i++){
 			RepairMaterial material = RepairMaterials.get(i);
 			int quantity = asset.isNeeded(material);
@@ -111,32 +109,5 @@ public class Warehouse implements WarehouseInterface {
 		}
 		RepairMaterials.add(newMaterials);
 	}
-	
-	/**
-	 * this method return the tool by name,  for Parser use.
-	 * @return RepairTool 
-	 */
-	//protected RepairTool findToolByName(String name){
-	//	for (int i = 0 ; i < tools.size(); i++){
-	///		RepairTool toolForComper = tools.get(i);
-	//		if (toolForComper.toString() == name)
-	//			return toolForComper;
-	//	}
-	//	return null;
-	//}
-	
-	/**
-	 * this method return the tool by name,  for Parser use.
-	 * @return RepairMaterial 
-	 */
-	//protected RepairMaterial findMaterialByName(String name){
-	//	for (int i = 0 ; i < tools.size(); i++){
-	//		RepairMaterial materialForComp = RepairMaterials.get(i);
-	//		if (materialForComp.toString() == name)
-	//			return materialForComp;
-	//	}
-	//	return null;
-	//}
-
 }
 
