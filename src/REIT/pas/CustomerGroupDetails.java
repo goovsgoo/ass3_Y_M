@@ -117,6 +117,7 @@ public class CustomerGroupDetails {
         report.updateDamage(damage);
         
 		requests.removeElementAt(0);
+		management.decrementRequestCounter();
 		try {
 			management.requestLatchEject();
 		} catch (Exception e) {

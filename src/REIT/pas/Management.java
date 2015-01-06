@@ -38,6 +38,8 @@ How?
  */
 public class Management {
 	
+	public static final int TIMEMULTI = 1000;
+	
 	private Assets assets;
 	private ArrayList<AssetContent> assetContent;
 	
@@ -66,7 +68,7 @@ public class Management {
 	
 	private int requestCounter;
 	private CountDownLatch requestLatch;
-	private int end = 0;
+	private boolean end = false;
 	
 
 	private Management(){
@@ -176,7 +178,7 @@ public class Management {
 				groupRequest.LinkAsset(matchingAsset);
 				groupRequest.updateStatus();
 				matchingAsset.updateStatus();
-				decrementRequestCounter();
+				
 			}
 			else 
 				groupRequest = null;
@@ -188,9 +190,13 @@ public class Management {
 	/**
 	 *  shutdown Management
 	 */
-	protected void shutdown(){
-		while(end==0);
-		try {Thread.sleep(5000);} catch (InterruptedException e) {e.printStackTrace();}
+	private void shutdown(){
+
+		while(!end){
+			try {Thread.sleep(TIMEMULTI);} catch (InterruptedException e) {e.printStackTrace();}
+		}
+		try {Thread.sleep(17 * Management.TIMEMULTI );} catch (InterruptedException e) {e.printStackTrace();}
+
 		while(numMaintenanceMen != 0);
 		executor.shutdown();
 		LOGGER.info("End of Simulation.");
@@ -244,7 +250,7 @@ public class Management {
 	public void decrementRequestCounter() {
 		requestCounter--;
 		if(requestCounter==0){
-			end=1;
+			end=true;
 		}
 	}
 	

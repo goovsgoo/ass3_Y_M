@@ -3,6 +3,7 @@ package REIT.act;
 import java.util.concurrent.Callable;
 
 import REIT.pas.Customer;
+import REIT.pas.Management;
 
 public class CallableSimulateStayInAsset implements Callable<Double>{
 	
@@ -19,7 +20,7 @@ public class CallableSimulateStayInAsset implements Callable<Double>{
 	 * calculate the damage the customer did while staying
 	 */
 	public Double call() throws Exception {
-		Thread.sleep(timeInAsset*1000*24);
+		Thread.sleep(timeInAsset*Management.TIMEMULTI*24);
 		return oneCustomer.calculateDemage()*(timeInAsset);
 	}
 	

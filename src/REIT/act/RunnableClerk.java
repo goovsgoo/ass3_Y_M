@@ -98,7 +98,7 @@ public class RunnableClerk implements Runnable{
 	 * @return true if Clock work under 8 hours 
 	 */
 	 private boolean endOfDay(long startTime) {
-		 if (System.currentTimeMillis() - startTime  > 800)
+		 if (System.currentTimeMillis() - startTime  > 8 * Management.TIMEMULTI)
 			 return true;
 		 else 
 			 return false;
@@ -135,7 +135,7 @@ public class RunnableClerk implements Runnable{
 		long startTime = System.currentTimeMillis();
 		
 		try {
-			Thread.sleep(distance*1000);
+			Thread.sleep(distance*Management.TIMEMULTI);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -143,7 +143,7 @@ public class RunnableClerk implements Runnable{
 		long finishTime = System.currentTimeMillis();
 			
 		try {
-			Thread.sleep(distance*1000);
+			Thread.sleep(distance*Management.TIMEMULTI);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

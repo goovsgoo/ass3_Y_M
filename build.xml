@@ -6,7 +6,7 @@
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes"/>
+	<javac includeantruntime="false" destdir="build/classes" srcdir="src"><compilerarg line="-proc:none"/></javac>
     </target>
 
     <target name="jar" depends="compile">

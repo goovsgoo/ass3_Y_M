@@ -276,7 +276,7 @@ public class Parser {
 					Node requestNode = rentalRequestsElement.getElementsByTagName("Request").item(n);
 				 	if (requestNode.getNodeType() == Node.ELEMENT_NODE) {
 				 		Element requestElement = (Element) requestNode;
-				 		String requestID = new StringBuilder("Request ").append(n).toString();
+				 		String requestID = new StringBuilder("Request ").append(j).append(n).toString();
 				 		String Type = requestElement.getElementsByTagName("Type").item(0).getTextContent();
 		 				int Size = Integer.parseInt(requestElement.getElementsByTagName("Size").item(0).getTextContent());
 		 				int Duration = Integer.parseInt(requestElement.getElementsByTagName("Duration").item(0).getTextContent());
