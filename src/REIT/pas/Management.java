@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.concurrent.*;
 import REIT.act.*;
 
@@ -43,16 +42,12 @@ public class Management {
 	private Assets assets;
 	private ArrayList<AssetContent> assetContent;
 	
-
-	private Vector<String> toolNames;
-	private Vector<String> materialNames;
-	
 	private ArrayList<RunnableClerk> clerks;
 	private CountDownLatch clerksLatch;
 
-	private  int day = 0;
+	private  boolean day =false;
 	
-	private Vector<RunnableMaintenanceRequest> MaintenanceMen;
+	private ArrayList<RunnableMaintenanceRequest> MaintenanceMen;
 	private int numMaintenanceMen;
 
 	private int numAssetToFix;
@@ -67,7 +62,6 @@ public class Management {
 	private ExecutorService executor;
 	
 	private int requestCounter;
-	private CountDownLatch requestLatch;
 	private boolean end = false;
 	
 
@@ -76,12 +70,9 @@ public class Management {
 		assets = Assets.sampleAsset();
 		assetContent = new ArrayList<AssetContent>();
 		
-		toolNames=new Vector<>();
-		materialNames=new Vector<>();
-		
 		clerks= new ArrayList<RunnableClerk>();
 		
-		MaintenanceMen = new Vector<RunnableMaintenanceRequest>();
+		MaintenanceMen = new ArrayList<RunnableMaintenanceRequest>();
 		numMaintenanceMen=0;
 		numAssetToFix=0;
 		
@@ -127,13 +118,11 @@ public class Management {
 	
 	/**
 	 * start the REIT simulation
-	 * shut down when end = 1
+	 * shut down when end = true
 	 */
 	public void start(){
 		assets.sort();	
 		LOGGER.info("Simulation Session Started.");	
-		
-		requestLatch = new CountDownLatch(requestCounter);
 		
 		for (RunnableCustomerGroupManager groupManager : customerGroupManager){
 			executor.execute(groupManager);
@@ -142,7 +131,7 @@ public class Management {
 			executor.execute(clerk);
 		}
 		resetClerkLatch();
-		day =0;
+		day = false;
 
 		shutdown();
 		
@@ -201,27 +190,7 @@ public class Management {
 		executor.shutdown();
 		LOGGER.info("End of Simulation.");
 		LOGGER.info(Statistics.instance().toString());
-	}
-
-	
-	/**
-	 * Collects all existing material names in the project
-	 * @param materialName
-	 */
-	public void addMaterialNameToColl(String materialName) {
-		if(!materialNames.contains(materialName))
-			materialNames.add(materialName);
-	}
-	/**
-	 * Collects all existing tool names in the project
-	 * @param toolName
-	 */
-	public void addToolNameToColl(String toolName) {
-		if(!toolNames.contains(toolName))
-			toolNames.add(toolName);
-	}
-	
-	
+	}	
 
 	/**
 	 * add a new asset to the asset collection
@@ -232,7 +201,7 @@ public class Management {
 	}
 
 	/**
-	 * find a manger in ther manger list based on his name
+	 * find a manger in their manger list based on his name
 	 * @param name - the manager name
 	 * @return the manager itself
 	 */
@@ -341,19 +310,11 @@ public class Management {
 					executor.execute(maintenance);
 					numMaintenanceMen++;
 				}
-				day = 0;
+				day = false;
 			}
 		}
 		clerksLatch.await();
 		resetClerkLatch();
-	}
-	
-	/**
-	 * all the clerks wait for the next day
-	 * @throws Exception
-	 */
-	public void requestLatchEject() throws Exception {
-		requestLatch.countDown();
 	}
 
 	/**
@@ -405,9 +366,9 @@ public class Management {
 	 * reset Clerk Latch to number of clerks + num maintenance men
 	 */
 	public void resetClerkLatch() {
-		if (day == 0){
+		if (day == false){
 			clerksLatch = new CountDownLatch(clerks.size()+1);
-			day=1;
+			day=true;
 		}
 	}
 

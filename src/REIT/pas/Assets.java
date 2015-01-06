@@ -69,20 +69,22 @@ public class Assets{
 	 * finds an asset that we need to fix
 	 * @return Asset
 	 */
-	public synchronized Asset findAssetToFix(){
-		boolean found = false;
-		int i = 0;
-		Asset matchingAsset = null;
-		while (!found && i < size()) {
-			if (AssetsCollection.get(i).assetHealth() <= 65 && AssetsCollection.get(i).canTheMaintenceManCome()) {
-				matchingAsset = AssetsCollection.get(i);
-				found = true;
-				matchingAsset.changeFixingStatus();
+	public Asset findAssetToFix(){
+		synchronized(this.getClass()){
+			boolean found = false;
+			int i = 0;
+			Asset matchingAsset = null;
+			while (!found && i < size()) {
+				if (AssetsCollection.get(i).assetHealth() <= 65 && AssetsCollection.get(i).canTheMaintenceManCome()) {
+					matchingAsset = AssetsCollection.get(i);
+					found = true;
+					matchingAsset.changeFixingStatus();
+				}
+				
+				i++;
 			}
-			
-			i++;
+			return matchingAsset;
 		}
-		return matchingAsset;
 		
 	}
 	

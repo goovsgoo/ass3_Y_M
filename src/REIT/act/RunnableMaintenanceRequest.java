@@ -52,11 +52,9 @@ public class RunnableMaintenanceRequest implements Runnable {
 			while (assetToFix == null) {
 				
 				if (System.currentTimeMillis() - timeForFix >= 16 * Management.TIMEMULTI){
-					synchronized(this){
 						this.shutdown();
 						needBreak=true;
 						break;
-					}
 				}
 				
 				assetToFix = assets.findAssetToFix();

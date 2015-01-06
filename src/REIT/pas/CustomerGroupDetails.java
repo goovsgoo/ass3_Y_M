@@ -118,11 +118,6 @@ public class CustomerGroupDetails {
         
 		requests.removeElementAt(0);
 		management.decrementRequestCounter();
-		try {
-			management.requestLatchEject();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
